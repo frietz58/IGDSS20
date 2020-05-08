@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
             fileData = File.ReadAllBytes("Assets/Textures/Heightmap_16.png");
             heightmap = new Texture2D(2, 2);
             heightmap.LoadImage(fileData); //..this will auto-resize the texture dimensions.
-            Debug.Log(heightmap);
+            // Debug.Log(heightmap);
 
             // iter over image width and height and instanciate tile accordinly
             for (int row_ind = 0; row_ind < heightmap.height; row_ind++)
@@ -50,11 +50,11 @@ public class GameManager : MonoBehaviour
                     float intensity = pixel_val.maxColorComponent;
                     
                     string msg1 = "x: {0}, y: {1}, pixel: {2}";
-                    Debug.LogFormat(string.Format(msg1, row_ind, col_ind, intensity));
+                    // Debug.LogFormat(string.Format(msg1, row_ind, col_ind, intensity));
 
                     UnityEngine.Vector3 pos_vec = offsetToPos(row_ind, col_ind, intensity * heightmapScaleFactor);
                     string msg2 = "row: {0}, col: {1}, height: {2}, pos_vec: {3}";
-                    Debug.LogFormat(string.Format(msg2, row_ind, col_ind, intensity * heightmapScaleFactor, pos_vec));
+                    // Debug.LogFormat(string.Format(msg2, row_ind, col_ind, intensity * heightmapScaleFactor, pos_vec));
 
                     Instantiate(getTileFromPixelVal(intensity), pos_vec,  Quaternion.identity);
 
