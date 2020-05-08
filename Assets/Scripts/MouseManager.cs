@@ -5,8 +5,9 @@ using UnityEngine;
 public class MouseManager : MonoBehaviour
 {
     public GameManager gameManager;
-    public float mouseSpeed = 100.0f;
-    float boundaryConstant = 150.0f;
+    public float mouseSpeed = 150.0f;
+    public float scrollSpeed = 50.0f;
+    float boundaryConstant = 160.0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,6 +27,10 @@ public class MouseManager : MonoBehaviour
                 transform.position.y,
                 Mathf.Clamp(transform.position.z - mouseX, gameManager.smallestColPos - boundaryConstant, gameManager.largestColPos + boundaryConstant)
             );
+        }
+        if (Input.GetAxis("Mouse ScrollWheel") != 0)
+        {
+            transform.position += scrollSpeed * new Vector3(0, -Input.GetAxisRaw("Mouse ScrollWheel"), 0);
         }
     }
 }
