@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    // if set to true, log debug to console
+    bool verbose = false;
     Texture2D heightmap = null;
 
     // heightmap contains values between 0 and 1, we want greater height differences, so we scale the height values
@@ -24,7 +26,7 @@ public class GameManager : MonoBehaviour
         byte[] fileData;
         if (File.Exists("Assets/Textures/Heightmap_16.png"))
         {
-            fileData = File.ReadAllBytes("Assets/Textures/Heightmap_16.png");
+            fileData = File.ReadAllBytes("Assets/Textures/Heightmap_128.png");
             heightmap = new Texture2D(2, 2);
             heightmap.LoadImage(fileData); //..this will auto-resize the texture dimensions.
             // Debug.Log(heightmap);
@@ -48,14 +50,20 @@ public class GameManager : MonoBehaviour
                     // rgba color at each index, we use the maximun color value as height
                     UnityEngine.Color pixel_val = heightmap.GetPixel(row_ind, col_ind);
                     float intensity = pixel_val.maxColorComponent;
+                    if(verbose)
+                    {
+                        string msg1 = "x: {0}, y: {1}, pixel: {2}";
+                        Debug.LogFormat(string.Format(msg1, row_ind, col_ind, intensity));
+                    }
                     
-                    string msg1 = "x: {0}, y: {1}, pixel: {2}";
-                    // Debug.LogFormat(string.Format(msg1, row_ind, col_ind, intensity));
 
                     UnityEngine.Vector3 pos_vec = offsetToPos(row_ind, col_ind, intensity * heightmapScaleFactor);
-                    string msg2 = "row: {0}, col: {1}, height: {2}, pos_vec: {3}";
-                    // Debug.LogFormat(string.Format(msg2, row_ind, col_ind, intensity * heightmapScaleFactor, pos_vec));
-
+                    if(verbose)
+                    {
+                        string msg2 = "row: {0}, col: {1}, height: {2}, pos_vec: {3}";
+                        Debug.LogFormat(string.Format(msg2, row_ind, col_ind, intensity * heightmapScaleFactor, pos_vec));
+                    }
+        
                     Instantiate(getTileFromPixelVal(intensity), pos_vec,  Quaternion.identity);
 
                 }

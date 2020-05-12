@@ -6,8 +6,9 @@ public class MouseManager : MonoBehaviour
 {
     public GameManager gameManager;
     public float mouseSpeed = 150.0f;
-    public float scrollSpeed = 50.0f;
-    float boundaryConstant = 160.0f;
+    public float scrollSpeed = 10.0f;
+    float boundaryConstant = 50.0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,20 +18,49 @@ public class MouseManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * mouseSpeed;
-        float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * mouseSpeed;        
-
         if (Input.GetMouseButton(1))
         {
-            transform.position = new Vector3(
-                Mathf.Clamp(transform.position.x + mouseY, gameManager.smallestRowPos - boundaryConstant, gameManager.largestRowPos + boundaryConstant),
-                transform.position.y,
-                Mathf.Clamp(transform.position.z - mouseX, gameManager.smallestColPos - boundaryConstant, gameManager.largestColPos + boundaryConstant)
-            );
+            // move on xz plane on right mouse click
+            transform.position = moveCamera();
         }
         if (Input.GetAxis("Mouse ScrollWheel") != 0)
         {
-            transform.position += scrollSpeed * new Vector3(0, -Input.GetAxisRaw("Mouse ScrollWheel"), 0);
+            // zoom on scroll wheel
+            zoomCamera();
         }
+        if (Input.GetMouseButtonDown(0))
+        {
+            // output name of object on left mouse click
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			RaycastHit hit;
+			if (Physics.Raycast(ray, out hit))
+            {
+				Debug.Log(hit.collider.gameObject.name);
+			}
+		}
+        
+    }
+
+    Vector3 moveCamera()
+    {
+        float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * mouseSpeed;
+        float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * mouseSpeed;
+        float minXZ = gameManager.largestRowPos - boundaryConstant;
+        float maxXZ = gameManager.smallestRowPos + boundaryConstant;
+        return new Vector3(
+                Mathf.Clamp(transform.position.x + mouseY, minXZ, maxXZ),
+                transform.position.y,
+                Mathf.Clamp(transform.position.z - mouseX, minXZ, maxXZ)
+        );
+    }
+
+    void zoomCamera()
+    {
+        float fov = Camera.main.fieldOfView;
+        fov -= Input.GetAxisRaw("Mouse ScrollWheel") * scrollSpeed;
+        float minFov = 15;
+        float maxFov = 80;
+        fov = Mathf.Clamp(fov, minFov, maxFov);
+        Camera.main.fieldOfView = fov;
     }
 }

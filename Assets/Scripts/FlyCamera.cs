@@ -15,9 +15,9 @@ public class FlyCamera : MonoBehaviour
 		WASD/Arrows:    Movement
 		          Q:    Climb
 		          E:    Drop
-                      Shift:    Move faster
-                    Control:    Move slower
-                        End:    Toggle cursor locking to screen (you can also press Ctrl+P to toggle play mode on and off).
+              Shift:    Move faster
+            Control:    Move slower
+                End:    Toggle cursor locking to screen (you can also press Ctrl+P to toggle play mode on and off).
 	*/
 
 	public float cameraSensitivity = 90;
@@ -31,7 +31,7 @@ public class FlyCamera : MonoBehaviour
 
 	void Start()
 	{
-		Screen.lockCursor = true;
+		Cursor.lockState = CursorLockMode.Locked;
 	}
 
 	void Update()
@@ -65,7 +65,7 @@ public class FlyCamera : MonoBehaviour
 
 		if (Input.GetKeyDown(KeyCode.End))
 		{
-			Screen.lockCursor = (Screen.lockCursor == false) ? true : false;
+			Cursor.lockState = (Cursor.lockState == CursorLockMode.Locked) ? CursorLockMode.Locked : CursorLockMode.None;
 		}
 	}
 }
