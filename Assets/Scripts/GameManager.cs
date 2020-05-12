@@ -9,14 +9,15 @@ public class GameManager : MonoBehaviour
 
     // heightmap contains values between 0 and 1, we want greater height differences, so we scale the height values
     public int heightmapScaleFactor = 100;
-    public float smallestRowPos = 0f;
-    public float largestRowPos = 0f;
-    public float smallestColPos = 0f;
-    public float largestColPos = 0f;
+
+    public float firstRowPos = 0f;
+    public float lastRowPos = 0f;
+    public float firstColPos = 0f;
+    public float lastColPos = 0f;
 
     // how much we have to move the tiles, for the next position
-    public float row_offset_x = -8.65f;
-    public int col_offset_z = -10;
+    public float row_offset_x = 8.65f;
+    public int col_offset_z = 10;
 
     // Start is called before the first frame update
     void Start()
@@ -34,17 +35,17 @@ public class GameManager : MonoBehaviour
             // iter over image width and height and instanciate tile accordinly
             for (int row_ind = 0; row_ind < heightmap.height; row_ind++)
             {
-                if (row_ind > largestRowPos)
+                if (row_ind > lastRowPos)
                 {   
                     // keep these up to date so that they can be used as boundaries for camera script
-                    largestRowPos = row_ind;
+                    lastRowPos = row_ind;
                 }
 
                 for (int col_ind = 0; col_ind < heightmap.width; col_ind++)
                 {
-                    if (col_ind > largestColPos)
+                    if (col_ind > lastColPos)
                     {
-                        largestColPos = col_ind;
+                        lastColPos = col_ind;
                     }
 
                     // rgba color at each index, we use the maximun color value as height
@@ -58,6 +59,7 @@ public class GameManager : MonoBehaviour
                     
 
                     UnityEngine.Vector3 pos_vec = offsetToPos(row_ind, col_ind, intensity * heightmapScaleFactor);
+
                     if(verbose)
                     {
                         string msg2 = "row: {0}, col: {1}, height: {2}, pos_vec: {3}";
@@ -70,10 +72,10 @@ public class GameManager : MonoBehaviour
             }
 
             // scale boundaries from indices to correct game coordinates
-            largestColPos = largestColPos * col_offset_z;
-            largestRowPos = largestRowPos * row_offset_x;
+            lastColPos = lastColPos * col_offset_z;
+            lastRowPos = lastRowPos * row_offset_x;
             string msg3 = "Row range: [{0}, {1}], Col range: [{2}, {3}]";
-            Debug.Log(string.Format(msg3, smallestRowPos, largestRowPos, smallestColPos, largestColPos));
+            Debug.Log(string.Format(msg3, firstRowPos, lastRowPos, firstColPos, lastColPos));
         }
     }
 

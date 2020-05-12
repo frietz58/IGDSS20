@@ -45,12 +45,14 @@ public class MouseManager : MonoBehaviour
     {
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * mouseSpeed;
         float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * mouseSpeed;
-        float minXZ = gameManager.largestRowPos - boundaryConstant;
-        float maxXZ = gameManager.smallestRowPos + boundaryConstant;
+        float maxX = gameManager.lastRowPos + boundaryConstant;
+        float minX = gameManager.firstRowPos - boundaryConstant;
+        float maxZ = gameManager.lastColPos + boundaryConstant;
+        float minZ = gameManager.firstColPos - boundaryConstant;
         return new Vector3(
-                Mathf.Clamp(transform.position.x + mouseY, minXZ, maxXZ),
+                Mathf.Clamp(transform.position.x + mouseY, minX, maxX),
                 transform.position.y,
-                Mathf.Clamp(transform.position.z - mouseX, minXZ, maxXZ)
+                Mathf.Clamp(transform.position.z - mouseX, minZ, maxZ)
         );
     }
 
