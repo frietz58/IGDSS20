@@ -447,7 +447,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameManager: {fileID: 1768092941}
   mouseSpeed: 150
-  scrollSpeed: 50
+  scrollSpeed: 2500
+  rotHSpeed: 15
+  rotVSpeed: 15
 --- !u!1001 &538292285
 PrefabInstance:
   m_ObjectHideFlags: 0
