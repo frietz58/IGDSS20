@@ -448,8 +448,8 @@ MonoBehaviour:
   gameManager: {fileID: 1768092941}
   mouseSpeed: 150
   scrollSpeed: 2500
-  rotHSpeed: 15
-  rotVSpeed: 15
+  rotHSpeed: 20
+  rotVSpeed: 20
 --- !u!1001 &538292285
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.UI;
 using UnityEngine;
 
 public class MouseManager : MonoBehaviour
@@ -52,16 +53,17 @@ public class MouseManager : MonoBehaviour
         {
             // move on xz plane on right mouse click
             transform.position = moveCamera();
+
         }
         if (Input.GetAxis("Mouse ScrollWheel") != 0)
         {
             // zoom on scroll wheel
-            zoomCamera();
+            Camera.main.transform.position = zoomCamera();
         }
 
         if (Input.GetMouseButton(2))
         {
-            // rotate camera
+            // rotate camera on wheel down
             transform.eulerAngles = rotateCamera();
         }
 
@@ -79,14 +81,36 @@ public class MouseManager : MonoBehaviour
 
     Vector3 moveCamera()
     {
+
+        // get current camera forward and rightway vector
+        Vector3 camF = Camera.main.transform.forward;
+        Vector3 camR = Camera.main.transform.right;
+
+        camF.y = 0;
+        camR.y = 0;
+
+        camF = camF.normalized;
+        camR = camR.normalized;
+
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * mouseSpeed;
         float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * mouseSpeed;
 
-        return new Vector3(
-                Mathf.Clamp(transform.position.x + mouseY, minX, maxX),
-                transform.position.y,
-                Mathf.Clamp(transform.position.z - mouseX, minZ, maxZ)
-        );
+        //return new Vector3(
+        //        Mathf.Clamp(transform.position.x + mouseY, minX, maxX),
+        //        transform.position.y,
+        //        Mathf.Clamp(transform.position.z - mouseX, minZ, maxZ)
+        //);
+
+        Vector3 camPos = transform.position;
+
+        // add mouseY & mouseX to current rotation of camera, instead of world coordinates...
+        camPos -= camF * mouseY + camR * mouseX;
+
+        camPos.x = Mathf.Clamp(camPos.x, minX, maxX);
+        camPos.z = Mathf.Clamp(camPos.z, minZ, maxZ);
+
+        return camPos;
+
     }
 
     Vector3 rotateCamera()
@@ -97,7 +121,7 @@ public class MouseManager : MonoBehaviour
         return new Vector3(pitch, yaw, 0.0f);
     }
 
-    void zoomCamera()
+    Vector3 zoomCamera()
     {
         //float fov = Camera.main.fieldOfView;
         //fov -= Input.GetAxisRaw("Mouse ScrollWheel") * scrollSpeed;
@@ -115,7 +139,7 @@ public class MouseManager : MonoBehaviour
         float y_clamped = Mathf.Clamp(new_cam_pos.position.y, minY, maxY);
         float z_clamped = Mathf.Clamp(new_cam_pos.position.z, minZ, maxZ);
 
-        Camera.main.transform.position = new Vector3(x_clamped, y_clamped, z_clamped);        
+        return new Vector3(x_clamped, y_clamped, z_clamped);        
 
     }
 }
