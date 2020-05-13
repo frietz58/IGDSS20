@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5317740664871594728}
   - component: {fileID: 298299187167092352}
   - component: {fileID: 1782669143514545244}
+  - component: {fileID: -5261344577772454655}
   m_Layer: 8
   m_Name: AnimatedWaterTile
   m_TagString: Untagged
@@ -95,3 +96,16 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 2534964839176971238, guid: 597b62c1ceb417a488ac13b15c3068e1, type: 3}
+--- !u!114 &-5261344577772454655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9138774150196976272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e55f7201d536aad4b9bb19bd816d0d3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MouseOverColor: {r: 1, g: 0.64, b: 0, a: 0.8}

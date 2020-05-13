@@ -19,6 +19,15 @@ public class GameManager : MonoBehaviour
     public float row_offset_x = 8.65f;
     public int col_offset_z = 10;
 
+    //references to all the prefabs
+    public GameObject waterPrefab;
+    public GameObject sandPrefab;
+    public GameObject grassPrefab;
+    public GameObject ForestPrefab;
+    public GameObject stonePrefab;
+    public GameObject mountainPrefab;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -110,26 +119,39 @@ public class GameManager : MonoBehaviour
     {
         // return the gameobject to clone with instantiate, based on values given in moodle
         string tileName = "";
+        GameObject prefab;
         if (pixelVal == 0)
         {
-            tileName = "WaterTile";
+            //tileName = "WaterTile";
+            prefab = waterPrefab;
+
         } else if (pixelVal > 0.0 && pixelVal <= 0.2)
         {
-            tileName = "SandTile";
+            //tileName = "SandTile";
+            prefab = sandPrefab;
+
         } else if (pixelVal > 0.2 && pixelVal <= 0.4)
         {
-            tileName = "GrassTile";
+            //tileName = "GrassTile";
+            prefab = grassPrefab;
+
         } else if (pixelVal > 0.4 && pixelVal <= 0.6)
         {
-            tileName = "ForestTile";
+            //tileName = "ForestTile";
+            prefab = ForestPrefab;
+
         } else if (pixelVal > 0.6 && pixelVal <= 0.8)
         {
-            tileName = "StoneTile";
+            //tileName = "StoneTile";
+            prefab = stonePrefab;
+
         } else
         {
-            tileName = "MountainTile";
+            //tileName = "MountainTile";
+            prefab = mountainPrefab;
         }
 
-        return GameObject.Find(tileName);
+        //return GameObject.Find(tileName);
+        return prefab;
     }
 }
