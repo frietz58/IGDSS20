@@ -66,7 +66,8 @@ public class GameManager : MonoBehaviour
                         Debug.LogFormat(string.Format(msg2, row_ind, col_ind, intensity * heightmapScaleFactor, pos_vec));
                     }
         
-                    Instantiate(getTileFromPixelVal(intensity), pos_vec,  Quaternion.identity);
+                    var newTile = Instantiate(getTileFromPixelVal(intensity), pos_vec,  Quaternion.identity);
+                    newTile.transform.parent = GameObject.Find("SpawnedTiles").transform;
 
                 }
             }
