@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Linq;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -42,6 +44,9 @@ public class GameManager : MonoBehaviour
             heightmap.LoadImage(fileData); //..this will auto-resize the texture dimensions.
             // Debug.Log(heightmap);
 
+            // instanciate 2d array of empty Tile object with dims of the heightmap
+            _tileMap = new Tile[heightmap.width, heightmap.height];
+
             // iter over image width and height and instanciate tile accordinly
             for (int row_ind = 0; row_ind < heightmap.height; row_ind++)
             {
@@ -79,6 +84,17 @@ public class GameManager : MonoBehaviour
                     var newTile = Instantiate(getTileFromPixelVal(intensity), pos_vec, Quaternion.identity);
                     newTile.transform.parent = GameObject.Find("SpawnedTiles").transform;
 
+                    // set the position of the Tile entity object of of the spawned prefab
+                    Tile tileEntity = newTile.GetComponent<Tile>();
+                    tileEntity._coordinateWidth = col_ind;
+                    tileEntity._coordinateHeight = row_ind;
+
+                    // tileEntity._neighborTiles = FindNeighborsOfTile(tileEntity);
+
+
+                    // populate 2d array with the entity objects
+                    _tileMap[row_ind, col_ind] = newTile.GetComponent<Tile>();
+
                 }
             }
 
@@ -87,6 +103,11 @@ public class GameManager : MonoBehaviour
             lastRowPos = lastRowPos * row_offset_x;
             string msg3 = "Row range: [{0}, {1}], Col range: [{2}, {3}]";
             Debug.Log(string.Format(msg3, firstRowPos, lastRowPos, firstColPos, lastColPos));
+
+            foreach(Tile tileEntity in _tileMap)
+            {
+                tileEntity._neighborTiles = FindNeighborsOfTile(tileEntity);
+            }
         }
     }
 
@@ -305,9 +326,73 @@ public class GameManager : MonoBehaviour
     {
         List<Tile> result = new List<Tile>();
 
+        // the indices for accessing the six neighbors on the 2d array...
+        // because of the hexagonal offset, these are different depending on whether tile is fro even or odd row on latice
+        var neighborhood_access_even_row = new List<Tuple<int, int>> {
+            Tuple.Create(-1, 0),
+            Tuple.Create(-1, +1),
+            Tuple.Create(0, -1),
+            Tuple.Create(0, +1),
+            Tuple.Create(+1, 0),
+            Tuple.Create(+1, +1)
+        };
+
+        var neighborhood_access_odd_row = new List<Tuple<int, int>> { 
+            Tuple.Create(-1, -1),
+            Tuple.Create(-1, +0),
+            Tuple.Create(0, -1),
+            Tuple.Create(0, +1),
+            Tuple.Create(+1, -1),
+            Tuple.Create(+1, 0)
+        };
+
+        int[] neighborhood_vals;
+
+        // create list we will iterate over and list object dynamically
+        List<Tuple<int, int>> neighborhood_access;
+
+        if (t._coordinateHeight % 2 == 0)
+        {
+            neighborhood_access = neighborhood_access_even_row;
+        } else
+        {
+            neighborhood_access = neighborhood_access_odd_row;
+        }
+
+
+        foreach(Tuple<int, int> neighbor_inds in neighborhood_access)
+        {
+            int neighbor_row_ind = t._coordinateHeight + neighbor_inds.Item1;
+            int neighbor_col_ind = t._coordinateWidth + neighbor_inds.Item2;
+
+            if(isValidTileIndex(neighbor_row_ind, neighbor_col_ind))
+            {
+                Tile neighbor_tile = _tileMap[neighbor_row_ind, neighbor_col_ind];
+                result.Add(neighbor_tile);
+            }
+
+        }
+
         //TODO: put all neighbors in the result list
 
         return result;
+    }
+
+    // return boolean indicating whether a a combination of row & col indices lies on the 2d lattice of tiles that form our map
+    private Boolean isValidTileIndex(int row_ind, int col_ind)
+    {
+        if (row_ind < 0 || col_ind < 0)
+        {
+            return false;
+        }
+        else if (row_ind >= heightmap.width || col_ind >= heightmap.height)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
     #endregion
 }

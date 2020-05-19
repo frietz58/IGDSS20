@@ -465,7 +465,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1768092940}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd580981bf7ab5845976a690fd1035a2, type: 3}
+  m_Script: {fileID: 11500000, guid: a9719ace9351f6d4081d7db736c3238d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   heightmapScaleFactor: 50
@@ -487,6 +487,15 @@ MonoBehaviour:
     type: 3}
   mountainPrefab: {fileID: 9154993657079601320, guid: 35b64c97ffd7b7e4caf04c0e621aec7b,
     type: 3}
+  _buildingPrefabs: []
+  _selectedBuildingPrefabIndex: 0
+  _ResourcesInWarehouse_Fish: 0
+  _ResourcesInWarehouse_Wood: 0
+  _ResourcesInWarehouse_Planks: 0
+  _ResourcesInWarehouse_Wool: 0
+  _ResourcesInWarehouse_Clothes: 0
+  _ResourcesInWarehouse_Potato: 0
+  _ResourcesInWarehouse_Schnapps: 0
 --- !u!4 &1768092942
 Transform:
   m_ObjectHideFlags: 0
