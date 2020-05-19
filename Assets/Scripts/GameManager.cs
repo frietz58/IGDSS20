@@ -348,7 +348,7 @@ public class GameManager : MonoBehaviour
 
         int[] neighborhood_vals;
 
-        // create list we will iterate over and list object dynamically
+        // create list we will iterate over and bind list object dynamically
         List<Tuple<int, int>> neighborhood_access;
 
         if (t._coordinateHeight % 2 == 0)

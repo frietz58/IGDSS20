@@ -29,13 +29,13 @@ public class HighlightObject : MonoBehaviour
 
     }
 
-     void OnMouseOver()
+    void OnMouseOver()
     {
         // Change the color of the GameObject to red when the mouse is over GameObject
         highlightMaterial.color = m_MouseOverColor;
     }
 
-     void OnMouseExit()
+    void OnMouseExit()
     {
         // Reset the color of the GameObject back to normal
         highlightMaterial.color = m_OriginalColor;
