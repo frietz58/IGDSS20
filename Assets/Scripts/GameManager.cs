@@ -42,12 +42,11 @@ public class GameManager : MonoBehaviour
             fileData = File.ReadAllBytes("Assets/Textures/Heightmap_128.png");
             heightmap = new Texture2D(2, 2);
             heightmap.LoadImage(fileData); //..this will auto-resize the texture dimensions.
-            // Debug.Log(heightmap);
 
             // instanciate 2d array of empty Tile object with dims of the heightmap
             _tileMap = new Tile[heightmap.width, heightmap.height];
 
-            // iter over image width and height and instanciate tile accordinly
+            // iter over image width and height and instanciate tile accordingly
             for (int row_ind = 0; row_ind < heightmap.height; row_ind++)
             {
                 if (row_ind > lastRowPos)
@@ -104,7 +103,7 @@ public class GameManager : MonoBehaviour
             string msg3 = "Row range: [{0}, {1}], Col range: [{2}, {3}]";
             Debug.Log(string.Format(msg3, firstRowPos, lastRowPos, firstColPos, lastColPos));
 
-            foreach(Tile tileEntity in _tileMap)
+            foreach (Tile tileEntity in _tileMap)
             {
                 tileEntity._neighborTiles = FindNeighborsOfTile(tileEntity);
             }
@@ -114,9 +113,6 @@ public class GameManager : MonoBehaviour
     Vector3 offsetToPos(int row_ind, int col_ind, float height)
     {
         // we need to convert the x,y indices from the heightmap to game coordinates
-
-
-
         float x_pos = row_offset_x * row_ind;
         float z_pos = col_offset_z * col_ind;
 
@@ -127,7 +123,6 @@ public class GameManager : MonoBehaviour
         }
 
         Vector3 pos_vec = new Vector3(x_pos, height, z_pos);
-
         return pos_vec;
     }
 
@@ -175,14 +170,12 @@ public class GameManager : MonoBehaviour
         //return GameObject.Find(tileName);
         return prefab;
     }
-
     #endregion
 
     #region Buildings
     public GameObject[] _buildingPrefabs; //References to the building prefabs
     public int _selectedBuildingPrefabIndex = 0; //The current index used for choosing a prefab to spawn from the _buildingPrefabs list
     #endregion
-
 
     #region Resources
     private Dictionary<ResourceTypes, float> _resourcesInWarehouse = new Dictionary<ResourceTypes, float>(); //Holds a number of stored resources for every ResourceType
@@ -327,7 +320,7 @@ public class GameManager : MonoBehaviour
         List<Tile> result = new List<Tile>();
 
         // the indices for accessing the six neighbors on the 2d array...
-        // because of the hexagonal offset, these are different depending on whether tile is fro even or odd row on latice
+        // because of the hexagonal offset, these are different depending on whether tile is in even or odd row on latice
         var neighborhood_access_even_row = new List<Tuple<int, int>> {
             Tuple.Create(-1, 0),
             Tuple.Create(-1, +1),
@@ -337,7 +330,7 @@ public class GameManager : MonoBehaviour
             Tuple.Create(+1, +1)
         };
 
-        var neighborhood_access_odd_row = new List<Tuple<int, int>> { 
+        var neighborhood_access_odd_row = new List<Tuple<int, int>> {
             Tuple.Create(-1, -1),
             Tuple.Create(-1, +0),
             Tuple.Create(0, -1),
@@ -354,18 +347,19 @@ public class GameManager : MonoBehaviour
         if (t._coordinateHeight % 2 == 0)
         {
             neighborhood_access = neighborhood_access_even_row;
-        } else
+        }
+        else
         {
             neighborhood_access = neighborhood_access_odd_row;
         }
 
 
-        foreach(Tuple<int, int> neighbor_inds in neighborhood_access)
+        foreach (Tuple<int, int> neighbor_inds in neighborhood_access)
         {
             int neighbor_row_ind = t._coordinateHeight + neighbor_inds.Item1;
             int neighbor_col_ind = t._coordinateWidth + neighbor_inds.Item2;
 
-            if(isValidTileIndex(neighbor_row_ind, neighbor_col_ind))
+            if (isValidTileIndex(neighbor_row_ind, neighbor_col_ind))
             {
                 Tile neighbor_tile = _tileMap[neighbor_row_ind, neighbor_col_ind];
                 result.Add(neighbor_tile);
