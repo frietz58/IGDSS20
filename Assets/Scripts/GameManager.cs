@@ -1,9 +1,9 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 using System.IO;
+using System.Threading;
+using UnityEngine;
 using System.Linq;
-using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -33,6 +33,12 @@ public class GameManager : MonoBehaviour
     public GameObject ForestPrefab;
     public GameObject stonePrefab;
     public GameObject mountainPrefab;
+
+    //economy tick
+    public int seconds_past = 0;
+    public int playerMoney = 100;
+    public List<GameObject> upkeepBuildings = new List<GameObject>();
+    private int updateAt = 0;
 
     void mapGenerationMain()
     {
@@ -87,6 +93,7 @@ public class GameManager : MonoBehaviour
                     Tile tileEntity = newTile.GetComponent<Tile>();
                     tileEntity._coordinateWidth = col_ind;
                     tileEntity._coordinateHeight = row_ind;
+                    tileEntity._pos = pos_vec;
 
                     // tileEntity._neighborTiles = FindNeighborsOfTile(tileEntity);
 
@@ -214,6 +221,7 @@ public class GameManager : MonoBehaviour
     {
         HandleKeyboardInput();
         UpdateInspectorNumbersForResources();
+        updateEconomy();
     }
     #endregion
 
@@ -221,14 +229,14 @@ public class GameManager : MonoBehaviour
     //Makes the resource dictionary usable by populating the values and keys
     void PopulateResourceDictionary()
     {
-        _resourcesInWarehouse.Add(ResourceTypes.None, 0);
-        _resourcesInWarehouse.Add(ResourceTypes.Fish, 0);
-        _resourcesInWarehouse.Add(ResourceTypes.Wood, 0);
-        _resourcesInWarehouse.Add(ResourceTypes.Planks, 0);
-        _resourcesInWarehouse.Add(ResourceTypes.Wool, 0);
-        _resourcesInWarehouse.Add(ResourceTypes.Clothes, 0);
-        _resourcesInWarehouse.Add(ResourceTypes.Potato, 0);
-        _resourcesInWarehouse.Add(ResourceTypes.Schnapps, 0);
+        _resourcesInWarehouse.Add(ResourceTypes.None, 100);
+        _resourcesInWarehouse.Add(ResourceTypes.Fish, 100);
+        _resourcesInWarehouse.Add(ResourceTypes.Wood, 100);
+        _resourcesInWarehouse.Add(ResourceTypes.Planks, 100);
+        _resourcesInWarehouse.Add(ResourceTypes.Wool, 100);
+        _resourcesInWarehouse.Add(ResourceTypes.Clothes, 100);
+        _resourcesInWarehouse.Add(ResourceTypes.Potato, 100);
+        _resourcesInWarehouse.Add(ResourceTypes.Schnapps, 100);
     }
 
     //Sets the index for the currently selected building prefab by checking key presses on the numbers 1 to 0
@@ -304,14 +312,84 @@ public class GameManager : MonoBehaviour
     }
 
     //Checks if the currently selected building type can be placed on the given tile and then instantiates an instance of the prefab
-    private void PlaceBuildingOnTile(Tile t)
+    private void PlaceBuildingOnTile(Tile clicked_tile)
     {
+
         //if there is building prefab for the number input
         if (_selectedBuildingPrefabIndex < _buildingPrefabs.Length)
         {
             //TODO: check if building can be placed and then istantiate it
+            GameObject target_building = _buildingPrefabs[_selectedBuildingPrefabIndex];
 
+            if (target_building.GetComponent<Building>()._costMoney <= playerMoney && 
+                target_building.GetComponent<Building>()._costPlanks <= _resourcesInWarehouse[ResourceTypes.Planks] &&
+                target_building.GetComponent<Building>()._placement.Contains(clicked_tile._type))
+            {
+                GameObject newBuilding = Instantiate(target_building, clicked_tile._pos, Quaternion.identity);
+                
+                playerMoney -= newBuilding.GetComponent<Building>()._costMoney;
+                _resourcesInWarehouse[ResourceTypes.Planks] -= newBuilding.GetComponent<Building>()._costPlanks;
+
+                newBuilding.GetComponent<Building>()._tile = clicked_tile;
+                newBuilding.GetComponent<Building>()._efficiency = calcEfficiency(newBuilding);
+
+                upkeepBuildings.Add(newBuilding);
+            }
         }
+    }
+
+    private float calcEfficiency(GameObject b)
+    {
+        //float efficency = 0.0f;
+
+        if (!b.GetComponent<Building>()._scaleWithNeighbors)
+        {
+            return 1.0f;
+        }
+
+        List<Tile> neighbors = FindNeighborsOfTile(b.GetComponent<Building>()._tile);
+        List<Tile> scalingNeighbors = new List<Tile>();
+
+        if (b.GetComponent<Building>()._type == Building.BuildingTypes.Fishery)
+        {
+            scalingNeighbors = FindScalingNeighbors(Tile.TileTypes.Water, neighbors);
+        }
+        else if (b.GetComponent<Building>()._type == Building.BuildingTypes.Lumberjack)
+        {
+            scalingNeighbors = FindScalingNeighbors(Tile.TileTypes.Forest, neighbors);
+        }
+        else if (b.GetComponent<Building>()._type == Building.BuildingTypes.SheepFarm)
+        {
+            scalingNeighbors = FindScalingNeighbors(Tile.TileTypes.Grass, neighbors);
+        }
+        else if (b.GetComponent<Building>()._type == Building.BuildingTypes.PotatoFarm)
+        {
+            scalingNeighbors = FindScalingNeighbors(Tile.TileTypes.Grass, neighbors);
+        }
+
+        float efficency = (float)scalingNeighbors.Count / (float)b.GetComponent<Building>()._maxNeighbors;
+        Debug.Log(scalingNeighbors.Count);
+        if (efficency > 1)
+        {
+            efficency = 1;
+        }
+
+        return efficency;
+    }
+
+    private List<Tile> FindScalingNeighbors(Tile.TileTypes requireTileType, List<Tile> neighbors)
+    {
+        List<Tile> result = new List<Tile>();
+
+        foreach (Tile tile in neighbors)
+        {
+            if (tile._type == requireTileType)
+            {
+                result.Add(tile);
+            }
+        }
+
+        return result;
     }
 
     //Returns a list of all neighbors of a given tile
@@ -387,6 +465,51 @@ public class GameManager : MonoBehaviour
         {
             return true;
         }
+    }
+
+    private void updateEconomy()
+    {
+        seconds_past = (int)Time.time;
+
+        // generate resources produced by buildings
+        foreach (GameObject building in upkeepBuildings)
+        {
+            if ((seconds_past % (building.GetComponent<Building>()._generationInterval / building.GetComponent<Building>()._efficiency)) <= 0.1 && updateAt != seconds_past)
+            {
+                Debug.Log("Generating resource");
+
+                // take away resource needed for production and produce only if input resource available
+                if (building.GetComponent<Building>().input != ResourceTypes.None)
+                {
+                    Debug.Log("Requires input");
+                    if (_resourcesInWarehouse[building.GetComponent<Building>().input] >= 1)
+                    {
+                        _resourcesInWarehouse[building.GetComponent<Building>().input] -= 1;
+                        _resourcesInWarehouse[building.GetComponent<Building>().output] += building.GetComponent<Building>()._outputCount;
+                    }
+                }
+                else //just produce all the time
+                {
+                    Debug.Log("Doesn't require input");
+                    _resourcesInWarehouse[building.GetComponent<Building>().output] += building.GetComponent<Building>()._outputCount;
+                }
+
+            }
+        }
+
+        // generate income and pay upkeep of buildings
+        if (seconds_past % 10 == 0 && updateAt != seconds_past)
+        {
+            playerMoney += 100;
+            foreach (GameObject building in upkeepBuildings)
+            {
+                playerMoney -= building.GetComponent<Building>()._upkeep;
+            }
+        }
+
+        // makes sure we produce at most once epr second
+        updateAt = seconds_past;
+
     }
     #endregion
 }

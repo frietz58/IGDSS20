@@ -78,12 +78,14 @@ public class MouseManager : MonoBehaviour
                 Debug.LogFormat(msg0, hit.collider.GetComponent<Tile>()._type, hit.collider.GetComponent<Tile>()._coordinateWidth, hit.collider.GetComponent<Tile>()._coordinateHeight);
                 foreach(Tile t in hit.collider.GetComponent<Tile>()._neighborTiles)
                 {
-                    string msg1 = "Type: {0}, index: [{1}, {2}]";
+                    string msg1 = "Neighbor Type: {0}, index: [{1}, {2}]";
                     Debug.LogFormat(msg1, t._type, t._coordinateWidth, t._coordinateHeight);
 
                     var highlighter = t.GetComponent<HighlightObject>();
                     highlighter.timedHighlight();
                 }
+
+                gameManager.TileClicked(hit.collider.GetComponent<Tile>()._coordinateHeight, hit.collider.GetComponent<Tile>()._coordinateWidth);
                 
 			}
 		}

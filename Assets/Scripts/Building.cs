@@ -13,10 +13,11 @@ public class Building : MonoBehaviour
     public float _efficiency;
     public float _generationInterval;
     public int _outputCount;
-    public Tile.TileTypes _placement;
+    public Tile.TileTypes[] _placement;
     public bool _scaleWithNeighbors;
-    public (int, int) _minMaxNeighbors;
+    public int _maxNeighbors;
     public GameManager.ResourceTypes input;
+    public GameManager.ResourceTypes output;
     #endregion
 
     #region Enumerations
