@@ -48,7 +48,7 @@ public class MouseManager : MonoBehaviour
             minX = gameManager.firstRowPos - boundaryConstant;
             maxZ = gameManager.lastColPos + boundaryConstant;
             minZ = gameManager.firstColPos - boundaryConstant;
-            minY = 90f;
+            minY = 20f;
             maxY = 250f;
         }
 
