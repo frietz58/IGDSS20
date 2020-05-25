@@ -8,15 +8,12 @@ using System.Linq;
 public class GameManager : MonoBehaviour
 {
 
-    #region Map generation
+    #region Map Generation
     private Tile[,] _tileMap; //2D array of all spawned tiles
-
-    bool verbose = false;
     Texture2D heightmap = null;
-
+    
     // heightmap contains values between 0 and 1, we want greater height differences, so we scale the height values
     public int heightmapScaleFactor = 50;
-
     public float firstRowPos = 0f;
     public float lastRowPos = 0f;
     public float firstColPos = 0f;
@@ -34,14 +31,11 @@ public class GameManager : MonoBehaviour
     public GameObject stonePrefab;
     public GameObject mountainPrefab;
 
-    //economy tick
-    public int seconds_past = 0;
-    public int playerMoney = 100;
-    public List<GameObject> upkeepBuildings = new List<GameObject>();
-    private int updateAt = 0;
-
     void mapGenerationMain()
     {
+        // set to true for logging in console
+        bool verbose = false;
+
         byte[] fileData;
         if (File.Exists("Assets/Textures/Heightmap_16.png"))
         {
@@ -107,8 +101,12 @@ public class GameManager : MonoBehaviour
             // scale boundaries from indices to correct game coordinates
             lastColPos = lastColPos * col_offset_z;
             lastRowPos = lastRowPos * row_offset_x;
-            string msg3 = "Row range: [{0}, {1}], Col range: [{2}, {3}]";
-            Debug.Log(string.Format(msg3, firstRowPos, lastRowPos, firstColPos, lastColPos));
+
+            if (verbose)
+            {
+                string msg3 = "Row range: [{0}, {1}], Col range: [{2}, {3}]";
+                Debug.Log(string.Format(msg3, firstRowPos, lastRowPos, firstColPos, lastColPos));
+            }
 
             foreach (Tile tileEntity in _tileMap)
             {
@@ -202,6 +200,12 @@ public class GameManager : MonoBehaviour
     private float _ResourcesInWarehouse_Potato;
     [SerializeField]
     private float _ResourcesInWarehouse_Schnapps;
+
+    // Variables needed for economy update
+    public int seconds_past = 0;
+    public int playerMoney = 100;
+    public List<GameObject> upkeepBuildings = new List<GameObject>();
+    private int updateAt = 0;
     #endregion
 
     #region Enumerations
@@ -307,7 +311,6 @@ public class GameManager : MonoBehaviour
     public void TileClicked(int height, int width)
     {
         Tile t = _tileMap[height, width];
-
         PlaceBuildingOnTile(t);
     }
 
@@ -321,12 +324,12 @@ public class GameManager : MonoBehaviour
             //TODO: check if building can be placed and then istantiate it
             GameObject target_building = _buildingPrefabs[_selectedBuildingPrefabIndex];
 
-            if (target_building.GetComponent<Building>()._costMoney <= playerMoney && 
+            if (target_building.GetComponent<Building>()._costMoney <= playerMoney &&
                 target_building.GetComponent<Building>()._costPlanks <= _resourcesInWarehouse[ResourceTypes.Planks] &&
                 target_building.GetComponent<Building>()._placement.Contains(clicked_tile._type))
             {
                 GameObject newBuilding = Instantiate(target_building, clicked_tile._pos, Quaternion.identity);
-                
+
                 playerMoney -= newBuilding.GetComponent<Building>()._costMoney;
                 _resourcesInWarehouse[ResourceTypes.Planks] -= newBuilding.GetComponent<Building>()._costPlanks;
 
@@ -340,8 +343,6 @@ public class GameManager : MonoBehaviour
 
     private float calcEfficiency(GameObject b)
     {
-        //float efficency = 0.0f;
-
         if (!b.GetComponent<Building>()._scaleWithNeighbors)
         {
             return 1.0f;
@@ -368,7 +369,6 @@ public class GameManager : MonoBehaviour
         }
 
         float efficency = (float)scalingNeighbors.Count / (float)b.GetComponent<Building>()._maxNeighbors;
-        Debug.Log(scalingNeighbors.Count);
         if (efficency > 1)
         {
             efficency = 1;
@@ -417,8 +417,6 @@ public class GameManager : MonoBehaviour
             Tuple.Create(+1, 0)
         };
 
-        int[] neighborhood_vals;
-
         // create list we will iterate over and bind list object dynamically
         List<Tuple<int, int>> neighborhood_access;
 
@@ -446,7 +444,6 @@ public class GameManager : MonoBehaviour
         }
 
         //TODO: put all neighbors in the result list
-
         return result;
     }
 
@@ -474,10 +471,9 @@ public class GameManager : MonoBehaviour
         // generate resources produced by buildings
         foreach (GameObject building in upkeepBuildings)
         {
-            if ((seconds_past % (building.GetComponent<Building>()._generationInterval / building.GetComponent<Building>()._efficiency)) <= 0.1 && updateAt != seconds_past)
+            float generationInterval = building.GetComponent<Building>()._generationInterval / building.GetComponent<Building>()._efficiency;
+            if (seconds_past % generationInterval <= 0.1 && updateAt != seconds_past)
             {
-                Debug.Log("Generating resource");
-
                 // take away resource needed for production and produce only if input resource available
                 if (building.GetComponent<Building>().input != ResourceTypes.None)
                 {

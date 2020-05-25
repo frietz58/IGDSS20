@@ -5,10 +5,11 @@ using UnityEngine;
 
 public class MouseManager : MonoBehaviour
 {
+    #region Attributes
     public GameManager gameManager;
     public float mouseSpeed = 150.0f;
     public float scrollSpeed = 10.0f;
-    
+
     float boundaryConstant = 50.0f;
 
     // params for rotation speed, would make sense to adap those based on how far zoomed in we are...
@@ -26,7 +27,9 @@ public class MouseManager : MonoBehaviour
     float maxY = 0.0f;
     float maxZ = 0.0f;
     float minZ = 0.0f;
+    #endregion
 
+    #region MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
@@ -37,7 +40,7 @@ public class MouseManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        bool verbose = false;
         // get values from game gamemanger that were not available at start time...
         if (maxX == 0.0f)
         {
@@ -70,27 +73,36 @@ public class MouseManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             // output name of object on left mouse click
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			RaycastHit hit;
-			if (Physics.Raycast(ray, out hit))
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
             {
-                string msg0 = "Own type: {0}, own index: [{1}, {2}]";
-                Debug.LogFormat(msg0, hit.collider.GetComponent<Tile>()._type, hit.collider.GetComponent<Tile>()._coordinateWidth, hit.collider.GetComponent<Tile>()._coordinateHeight);
-                foreach(Tile t in hit.collider.GetComponent<Tile>()._neighborTiles)
+                if (verbose)
                 {
-                    string msg1 = "Neighbor Type: {0}, index: [{1}, {2}]";
-                    Debug.LogFormat(msg1, t._type, t._coordinateWidth, t._coordinateHeight);
+                    string msg0 = "Own type: {0}, own index: [{1}, {2}]";
+                    Debug.LogFormat(msg0, hit.collider.GetComponent<Tile>()._type, hit.collider.GetComponent<Tile>()._coordinateWidth, hit.collider.GetComponent<Tile>()._coordinateHeight);
+                }
+                
+                foreach (Tile t in hit.collider.GetComponent<Tile>()._neighborTiles)
+                {
+                    if (verbose)
+                    {
+                        string msg1 = "Neighbor Type: {0}, index: [{1}, {2}]";
+                        Debug.LogFormat(msg1, t._type, t._coordinateWidth, t._coordinateHeight);
+                    }
 
                     var highlighter = t.GetComponent<HighlightObject>();
                     highlighter.timedHighlight();
                 }
 
                 gameManager.TileClicked(hit.collider.GetComponent<Tile>()._coordinateHeight, hit.collider.GetComponent<Tile>()._coordinateWidth);
-                
-			}
-		}
-    }
 
+            }
+        }
+    }
+    #endregion
+
+    #region Methods
     Vector3 moveCamera()
     {
 
@@ -144,14 +156,15 @@ public class MouseManager : MonoBehaviour
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         float zoomDistance = scrollSpeed * Input.GetAxisRaw("Mouse ScrollWheel") * Time.deltaTime;
-        
+
         Transform new_cam_pos = Camera.main.transform;
         new_cam_pos.Translate(ray.direction * zoomDistance, Space.World);
         float x_clamped = Mathf.Clamp(new_cam_pos.position.x, minX, maxX);
         float y_clamped = Mathf.Clamp(new_cam_pos.position.y, minY, maxY);
         float z_clamped = Mathf.Clamp(new_cam_pos.position.z, minZ, maxZ);
 
-        return new Vector3(x_clamped, y_clamped, z_clamped);        
+        return new Vector3(x_clamped, y_clamped, z_clamped);
 
     }
+    #endregion
 }

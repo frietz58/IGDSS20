@@ -5,19 +5,19 @@ using UnityEngine;
 public class Building : MonoBehaviour
 {
     #region Attributes
-    public BuildingTypes _type; //The type of the tile
-    public int _upkeep;
-    public int _costMoney;
-    public int _costPlanks;
-    public Tile _tile;
-    public float _efficiency;
-    public float _generationInterval;
-    public int _outputCount;
-    public Tile.TileTypes[] _placement;
-    public bool _scaleWithNeighbors;
-    public int _maxNeighbors;
-    public GameManager.ResourceTypes input;
-    public GameManager.ResourceTypes output;
+    public BuildingTypes _type; //The type of the building
+    public int _upkeep; // The cost for upkeep of the building per economy tick
+    public int _costMoney; // The initial cost of the building in money
+    public int _costPlanks; // The initial cost of the building in planks
+    public Tile _tile; // The tile the building is placed on
+    public float _efficiency; // A float in [0,1] that represents the efficiency of the building
+    public float _generationInterval; // The seconds interval for the building to produce resources
+    public int _outputCount; // How many resources are output in one generation interval
+    public Tile.TileTypes[] _placement; // The types of tiles the building can be built on
+    public bool _scaleWithNeighbors; // Boolean whether the efficiency of the building depends on neighboring tiles
+    public int _maxNeighbors; // Number of neighboring tiles of a type needed to maximize efficiency
+    public GameManager.ResourceTypes input; // Resource type of input resources needed
+    public GameManager.ResourceTypes output; // Resource type of output resources
     #endregion
 
     #region Enumerations
@@ -25,15 +25,5 @@ public class Building : MonoBehaviour
     public enum BuildingTypes { Empty, Fishery, Lumberjack, Sawmill, SheepFarm, Knitters, PotatoFarm, Distillery };
     #endregion
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+    //This class acts as a data container and has no functionality
 }
