@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -488,9 +488,9 @@ MonoBehaviour:
   mountainPrefab: {fileID: 9154993657079601320, guid: 35b64c97ffd7b7e4caf04c0e621aec7b,
     type: 3}
   _buildingPrefabs:
-  - {fileID: 3865588124691730620, guid: 0083f789d61fe1b4e9b9b86d6dfb8638, type: 3}
+  - {fileID: 8447883038012900000, guid: 2bb0a264a58795c4693566b14382beff, type: 3}
   - {fileID: 1448458671912094828, guid: f24affc9dbad3bd4cbf882c1509dd2b1, type: 3}
-  - {fileID: 0}
+  - {fileID: 1052542124300016319, guid: 93653dc3ea8343846a0b94f7c5fbefcc, type: 3}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
