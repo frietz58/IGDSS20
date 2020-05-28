@@ -89,6 +89,9 @@ public class GameManager : MonoBehaviour
                     tileEntity._coordinateHeight = row_ind;
                     tileEntity._pos = pos_vec;
 
+                    //spawn random gameobject on tile, if tile supports it
+                    populateTileRandomly(tileEntity);
+
                     // tileEntity._neighborTiles = FindNeighborsOfTile(tileEntity);
 
 
@@ -111,6 +114,67 @@ public class GameManager : MonoBehaviour
             foreach (Tile tileEntity in _tileMap)
             {
                 tileEntity._neighborTiles = FindNeighborsOfTile(tileEntity);
+            }
+        }
+    }
+
+    void populateTileRandomly(Tile tile)
+    {
+        // not all tiles have random gameobjects to spawn...
+        if (!(tile.randomItems.Length == 0)){
+            if (tile._type == Tile.TileTypes.Forest)
+            {
+                //Debug.Log("Forest tile: generating trees");
+                
+                // apparently we need a generator for random values ? -.-
+                System.Random rand = new System.Random();
+
+                // from QA session: n times try to generate GameObject and let probability decide
+                for (int i = 0; i < 10; i++)
+                {
+                    //todo make probability dynamic, depending on tile types in neighborhood
+                    float keep_prob = 0.5f;
+
+                   
+                    double rand_val = rand.NextDouble();
+
+                    if (rand_val <= keep_prob)
+                    {
+
+                       // Debug.Log(rand_val);
+
+                        // get random position for GameObject on, based on width and height of tile
+                        Vector3 prop_pos = new Vector3(
+                            UnityEngine.Random.Range(0, 6) - 3f + tile._pos.x,
+                            tile._pos.y,
+                            UnityEngine.Random.Range(0, 8) - 4f + tile._pos.z
+                            );
+
+
+                        // get random gameobject (via random index) from array
+                        GameObject random_gameobject = tile.randomItems[rand.Next(0, tile.randomItems.Length)];
+
+                        var random_prop = Instantiate(
+                            random_gameobject,
+                            prop_pos, 
+                            Quaternion.Euler(
+                                UnityEngine.Random.Range(0, 20) - 10,
+                                UnityEngine.Random.Range(0, 360),
+                                UnityEngine.Random.Range(0, 20) - 10)
+                            );
+                        
+                        // set the correspondting tile as parent (mainly to keep hierarchy nicely structured)
+                        random_prop.transform.parent = tile.transform;
+
+                        // add the instantiated propr to the List of Gameobjects on the tile (maybe we want to do something with them later)
+                        // Lumberjacks could harvest trees, that slowly regrow...
+                        tile.randomGameObjects.Add(random_prop);
+
+                    }
+                }
+            } else if (tile._type == Tile.TileTypes.Grass)
+            {
+                //todo
             }
         }
     }
