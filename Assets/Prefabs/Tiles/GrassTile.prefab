@@ -22,9 +22,74 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2741443980732537442, guid: 4cdd9622e6eb2a6498e3d47c96b87198,
         type: 3}
+      propertyPath: randomGameObjects.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2741443980732537442, guid: 4cdd9622e6eb2a6498e3d47c96b87198,
+        type: 3}
+      propertyPath: randomPropPrefabs.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2741443980732537442, guid: 4cdd9622e6eb2a6498e3d47c96b87198,
+        type: 3}
       propertyPath: _type
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 2741443980732537442, guid: 4cdd9622e6eb2a6498e3d47c96b87198,
+        type: 3}
+      propertyPath: randomGameObjects.Array.data[0]
+      value: 
+      objectReference: {fileID: 164282, guid: 2a47d0bd64cd05d488d7ec1a627d4e9d, type: 3}
+    - target: {fileID: 2741443980732537442, guid: 4cdd9622e6eb2a6498e3d47c96b87198,
+        type: 3}
+      propertyPath: randomGameObjects.Array.data[1]
+      value: 
+      objectReference: {fileID: 171294, guid: b38971ffd2db94e47a9327178180b5c9, type: 3}
+    - target: {fileID: 2741443980732537442, guid: 4cdd9622e6eb2a6498e3d47c96b87198,
+        type: 3}
+      propertyPath: randomGameObjects.Array.data[2]
+      value: 
+      objectReference: {fileID: 100020, guid: e6fad05c4d5f2224aaa5c991267146d3, type: 3}
+    - target: {fileID: 2741443980732537442, guid: 4cdd9622e6eb2a6498e3d47c96b87198,
+        type: 3}
+      propertyPath: randomGameObjects.Array.data[3]
+      value: 
+      objectReference: {fileID: 155160, guid: 8c701e5c327022a4ebdc63a77af08f17, type: 3}
+    - target: {fileID: 2741443980732537442, guid: 4cdd9622e6eb2a6498e3d47c96b87198,
+        type: 3}
+      propertyPath: randomGameObjects.Array.data[4]
+      value: 
+      objectReference: {fileID: 104858, guid: 8264d38330b69044a8a7dff1b33b4fa7, type: 3}
+    - target: {fileID: 2741443980732537442, guid: 4cdd9622e6eb2a6498e3d47c96b87198,
+        type: 3}
+      propertyPath: randomGameObjects.Array.data[5]
+      value: 
+      objectReference: {fileID: 150520, guid: 4a03f352523c574468263a3f46b2ec46, type: 3}
+    - target: {fileID: 2741443980732537442, guid: 4cdd9622e6eb2a6498e3d47c96b87198,
+        type: 3}
+      propertyPath: randomPropPrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 164282, guid: 2a47d0bd64cd05d488d7ec1a627d4e9d, type: 3}
+    - target: {fileID: 2741443980732537442, guid: 4cdd9622e6eb2a6498e3d47c96b87198,
+        type: 3}
+      propertyPath: randomPropPrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 171294, guid: b38971ffd2db94e47a9327178180b5c9, type: 3}
+    - target: {fileID: 2741443980732537442, guid: 4cdd9622e6eb2a6498e3d47c96b87198,
+        type: 3}
+      propertyPath: randomPropPrefabs.Array.data[2]
+      value: 
+      objectReference: {fileID: 100020, guid: e6fad05c4d5f2224aaa5c991267146d3, type: 3}
+    - target: {fileID: 2741443980732537442, guid: 4cdd9622e6eb2a6498e3d47c96b87198,
+        type: 3}
+      propertyPath: randomPropPrefabs.Array.data[3]
+      value: 
+      objectReference: {fileID: 155160, guid: 8c701e5c327022a4ebdc63a77af08f17, type: 3}
+    - target: {fileID: 2741443980732537442, guid: 4cdd9622e6eb2a6498e3d47c96b87198,
+        type: 3}
+      propertyPath: randomPropPrefabs.Array.data[4]
+      value: 
+      objectReference: {fileID: 104858, guid: 8264d38330b69044a8a7dff1b33b4fa7, type: 3}
     - target: {fileID: 2810648041492908100, guid: 4cdd9622e6eb2a6498e3d47c96b87198,
         type: 3}
       propertyPath: m_Materials.Array.data[1]

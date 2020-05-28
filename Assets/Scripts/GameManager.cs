@@ -121,61 +121,85 @@ public class GameManager : MonoBehaviour
     void populateTileRandomly(Tile tile)
     {
         // not all tiles have random gameobjects to spawn...
-        if (!(tile.randomItems.Length == 0)){
+        if (!(tile.randomPropPrefabs.Length == 0)){
+
+            int spawn_tries = 0;  // number of times we try to spawn a prop
+            float keep_prob = 0.0f; // probability for actually spawning the prop
+            int max_random_offset = 6; // range how wide our props spread from tile center in x dir
+
+            //todo make probability dynamic, depending on tile types in neighborhood
             if (tile._type == Tile.TileTypes.Forest)
             {
-                //Debug.Log("Forest tile: generating trees");
-                
-                // apparently we need a generator for random values ? -.-
-                System.Random rand = new System.Random();
-
-                // from QA session: n times try to generate GameObject and let probability decide
-                for (int i = 0; i < 10; i++)
-                {
-                    //todo make probability dynamic, depending on tile types in neighborhood
-                    float keep_prob = 0.5f;
-
-                   
-                    double rand_val = rand.NextDouble();
-
-                    if (rand_val <= keep_prob)
-                    {
-
-                       // Debug.Log(rand_val);
-
-                        // get random position for GameObject on, based on width and height of tile
-                        Vector3 prop_pos = new Vector3(
-                            UnityEngine.Random.Range(0, 6) - 3f + tile._pos.x,
-                            tile._pos.y,
-                            UnityEngine.Random.Range(0, 8) - 4f + tile._pos.z
-                            );
-
-
-                        // get random gameobject (via random index) from array
-                        GameObject random_gameobject = tile.randomItems[rand.Next(0, tile.randomItems.Length)];
-
-                        var random_prop = Instantiate(
-                            random_gameobject,
-                            prop_pos, 
-                            Quaternion.Euler(
-                                UnityEngine.Random.Range(0, 20) - 10,
-                                UnityEngine.Random.Range(0, 360),
-                                UnityEngine.Random.Range(0, 20) - 10)
-                            );
-                        
-                        // set the correspondting tile as parent (mainly to keep hierarchy nicely structured)
-                        random_prop.transform.parent = tile.transform;
-
-                        // add the instantiated propr to the List of Gameobjects on the tile (maybe we want to do something with them later)
-                        // Lumberjacks could harvest trees, that slowly regrow...
-                        tile.randomGameObjects.Add(random_prop);
-
-                    }
-                }
+                spawn_tries = 10;
+                keep_prob = 0.5f; 
             } else if (tile._type == Tile.TileTypes.Grass)
             {
-                //todo
+                spawn_tries = 10;
+                keep_prob = 0.8f;
             }
+            else if (tile._type == Tile.TileTypes.Stone)
+            {
+                spawn_tries = 3;
+                keep_prob = 0.8f;
+            }
+            else if (tile._type == Tile.TileTypes.Mountain)
+            {
+                Debug.Log(tile._type);
+                spawn_tries = 1;
+                keep_prob = 1;
+                max_random_offset = 0; // spawn beacon always at center of mountain :D
+            }
+
+            //if (tile._type == Tile.TileTypes.Forest || tile._type == Tile.TileTypes.Grass)
+            //{
+
+            //Debug.Log(tile._type);
+                
+            // apparently we need a generator for random values ? -.-
+            System.Random rand = new System.Random();
+
+            // from QA session: n times try to generate GameObject and let probability decide
+            for (int i = 0; i < spawn_tries; i++)
+            {
+                // take random float between 0 and 1
+                double rand_val = rand.NextDouble();
+
+                if (rand_val <= keep_prob)
+                {
+
+                    // Debug.Log(rand_val);
+
+                    // get random position for GameObject on, based on width and height of tile
+                    Vector3 prop_pos = new Vector3(
+                        // UnityEngine.Random.Range only works in positive range, so we have to shift afterwards to get values +- zero...
+                        UnityEngine.Random.Range(0, max_random_offset) - (max_random_offset / 2f) + tile._pos.x, 
+                        tile._pos.y,
+                        UnityEngine.Random.Range(0, max_random_offset) - (max_random_offset / 2f) + tile._pos.z
+                        );
+
+
+                    // get random gameobject (via random index) from array
+                    GameObject random_gameobject = tile.randomPropPrefabs[rand.Next(0, tile.randomPropPrefabs.Length)];
+
+                    var random_prop = Instantiate(
+                        random_gameobject,
+                        prop_pos, 
+                        Quaternion.Euler(
+                            UnityEngine.Random.Range(0, 20) - 10,
+                            UnityEngine.Random.Range(0, 360),
+                            UnityEngine.Random.Range(0, 20) - 10)
+                        );
+                        
+                    // set the correspondting tile as parent (mainly to keep hierarchy nicely structured)
+                    random_prop.transform.parent = tile.transform;
+
+                    // add the instantiated propr to the List of Gameobjects on the tile (maybe we want to do something with them later)
+                    // Lumberjacks could harvest trees, that slowly regrow...
+                    tile._spawnedRandomGameObjects.Add(random_prop);
+
+                }
+            }
+            //}
         }
     }
 

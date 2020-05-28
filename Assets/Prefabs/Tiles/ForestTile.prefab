@@ -27,6 +27,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2741443980732537442, guid: 4cdd9622e6eb2a6498e3d47c96b87198,
         type: 3}
+      propertyPath: randomPropPrefabs.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2741443980732537442, guid: 4cdd9622e6eb2a6498e3d47c96b87198,
+        type: 3}
       propertyPath: _type
       value: 4
       objectReference: {fileID: 0}
@@ -45,6 +50,26 @@ PrefabInstance:
       propertyPath: randomItems.Array.data[2]
       value: 
       objectReference: {fileID: 104350, guid: d87f80d13c8f1ac4e8d5a2a5f23d6df8, type: 3}
+    - target: {fileID: 2741443980732537442, guid: 4cdd9622e6eb2a6498e3d47c96b87198,
+        type: 3}
+      propertyPath: randomPropPrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 132596, guid: c8d48f4ada079cc42a6c3a3102ceb41b, type: 3}
+    - target: {fileID: 2741443980732537442, guid: 4cdd9622e6eb2a6498e3d47c96b87198,
+        type: 3}
+      propertyPath: randomPropPrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 176998, guid: e5e4bafcab767fc459df0280771e3a88, type: 3}
+    - target: {fileID: 2741443980732537442, guid: 4cdd9622e6eb2a6498e3d47c96b87198,
+        type: 3}
+      propertyPath: randomPropPrefabs.Array.data[2]
+      value: 
+      objectReference: {fileID: 104350, guid: d87f80d13c8f1ac4e8d5a2a5f23d6df8, type: 3}
+    - target: {fileID: 2741443980732537442, guid: 4cdd9622e6eb2a6498e3d47c96b87198,
+        type: 3}
+      propertyPath: randomPropPrefabs.Array.data[3]
+      value: 
+      objectReference: {fileID: 110288, guid: 5a4e7db6b5d138a48ac28d3c085acb34, type: 3}
     - target: {fileID: 2810648041492908100, guid: 4cdd9622e6eb2a6498e3d47c96b87198,
         type: 3}
       propertyPath: m_Materials.Array.data[1]

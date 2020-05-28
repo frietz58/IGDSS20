@@ -11,8 +11,8 @@ public class Tile : MonoBehaviour
     public int _coordinateHeight; //The coordinate on the y-axis on the tile grid (not world coordinates)
     public int _coordinateWidth; //The coordinate on the x-axis on the tile grid (not world coordinates)
     public Vector3 _pos; // the pos vector
-    public GameObject[] randomItems; // array of undefined length can be given references to Prefabs to spawn on the tile (in inspector)
-    public List<GameObject> randomGameObjects; // A list of the actually instantiated GameObjects on the tile
+    public GameObject[] randomPropPrefabs; // array of undefined length can be given references to Prefabs to spawn on the tile (in inspector)
+    public List<GameObject> _spawnedRandomGameObjects; // A list of the actually instantiated GameObjects on the tile
     #endregion
 
     #region Enumerations
