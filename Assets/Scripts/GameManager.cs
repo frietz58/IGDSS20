@@ -126,12 +126,16 @@ public class GameManager : MonoBehaviour
             int spawn_tries = 0;  // number of times we try to spawn a prop
             float keep_prob = 0.0f; // probability for actually spawning the prop
             int max_random_offset = 6; // range how wide our props spread from tile center in x dir
+            Vector3 random_rotation_range = new Vector3(0, 360, 0);
 
             //todo make probability dynamic, depending on tile types in neighborhood
             if (tile._type == Tile.TileTypes.Forest)
             {
                 spawn_tries = 10;
-                keep_prob = 0.5f; 
+                keep_prob = 0.5f;
+                random_rotation_range.x = 20;
+                random_rotation_range.z = 20;
+
             } else if (tile._type == Tile.TileTypes.Grass)
             {
                 spawn_tries = 10;
@@ -185,9 +189,9 @@ public class GameManager : MonoBehaviour
                         random_gameobject,
                         prop_pos, 
                         Quaternion.Euler(
-                            UnityEngine.Random.Range(0, 20) - 10,
-                            UnityEngine.Random.Range(0, 360),
-                            UnityEngine.Random.Range(0, 20) - 10)
+                            UnityEngine.Random.Range(0, random_rotation_range.x) - random_rotation_range.x / 2,
+                            UnityEngine.Random.Range(0, random_rotation_range.y),
+                            UnityEngine.Random.Range(0, random_rotation_range.z) - random_rotation_range.z / 2)
                         );
                         
                     // set the correspondting tile as parent (mainly to keep hierarchy nicely structured)
