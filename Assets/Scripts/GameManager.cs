@@ -410,6 +410,7 @@ public class GameManager : MonoBehaviour
     private void PlaceBuildingOnTile(Tile clicked_tile)
     {
 
+
         //if there is building prefab for the number input
         if (_selectedBuildingPrefabIndex < _buildingPrefabs.Length)
         {
@@ -420,7 +421,12 @@ public class GameManager : MonoBehaviour
                 target_building.GetComponent<Building>()._costPlanks <= _resourcesInWarehouse[ResourceTypes.Planks] &&
                 target_building.GetComponent<Building>()._placement.Contains(clicked_tile._type))
             {
+                // instantiate building from prefab
                 GameObject newBuilding = Instantiate(target_building, clicked_tile._pos, Quaternion.identity);
+
+                // rotate building so that it faces default camera viewport
+                Vector3 rot_Vec = new Vector3(0, -90, 0);
+                newBuilding.transform.rotation = Quaternion.Euler(rot_Vec);
 
                 playerMoney -= newBuilding.GetComponent<Building>()._costMoney;
                 _resourcesInWarehouse[ResourceTypes.Planks] -= newBuilding.GetComponent<Building>()._costPlanks;
@@ -429,6 +435,12 @@ public class GameManager : MonoBehaviour
                 newBuilding.GetComponent<Building>()._efficiency = calcEfficiency(newBuilding);
 
                 upkeepBuildings.Add(newBuilding);
+
+                // destroy random props on tile
+                foreach (GameObject prop in clicked_tile._spawnedRandomGameObjects)
+                {
+                    Destroy(prop);
+                }
             }
         }
     }
