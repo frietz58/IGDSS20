@@ -378,6 +378,10 @@ public class GameManager : MonoBehaviour
         {
             _selectedBuildingPrefabIndex = 9;
         }
+
+        //string msg1 = "Selected building: {0}";
+        //Debug.LogFormat(string.Format(msg1, _buildingPrefabs[_selectedBuildingPrefabIndex]));
+
     }
 
     //Updates the visual representation of the resource dictionary in the inspector. Only for debugging

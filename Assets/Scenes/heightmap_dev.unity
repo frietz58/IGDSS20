@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657832, g: 0.49641377, b: 0.57481647, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641472, b: 0.5748177, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -493,7 +493,7 @@ MonoBehaviour:
   - {fileID: 1448458671912094828, guid: f24affc9dbad3bd4cbf882c1509dd2b1, type: 3}
   - {fileID: 1052542124300016319, guid: 93653dc3ea8343846a0b94f7c5fbefcc, type: 3}
   - {fileID: 1410590975352890329, guid: 07b7ad92098acf744aa7c41165d84ac7, type: 3}
-  - {fileID: 0}
+  - {fileID: 4537413580870363093, guid: 2a27d6a448597a842bfb4d5fa680302a, type: 3}
   - {fileID: 0}
   _selectedBuildingPrefabIndex: 0
   _ResourcesInWarehouse_Fish: 0
