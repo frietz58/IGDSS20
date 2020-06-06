@@ -121,8 +121,8 @@ MonoBehaviour:
   _placement: 030000000400000005000000
   _scaleWithNeighbors: 0
   _maxNeighbors: 0
-  input: 0
-  output: 0
+  input: 6
+  output: 7
 --- !u!1001 &121161616989647212
 PrefabInstance:
   m_ObjectHideFlags: 0

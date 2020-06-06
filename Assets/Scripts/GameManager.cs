@@ -585,7 +585,7 @@ public class GameManager : MonoBehaviour
                 // take away resource needed for production and produce only if input resource available
                 if (building.GetComponent<Building>().input != ResourceTypes.None)
                 {
-                    Debug.Log("Requires input");
+                    //Debug.Log("Requires input");
                     if (_resourcesInWarehouse[building.GetComponent<Building>().input] >= 1)
                     {
                         _resourcesInWarehouse[building.GetComponent<Building>().input] -= 1;
@@ -594,7 +594,7 @@ public class GameManager : MonoBehaviour
                 }
                 else //just produce all the time
                 {
-                    Debug.Log("Doesn't require input");
+                    //Debug.Log("Doesn't require input");
                     _resourcesInWarehouse[building.GetComponent<Building>().output] += building.GetComponent<Building>()._outputCount;
                 }
 
