@@ -58,9 +58,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1410590975352890329}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0429b4100d635944e8b42fdd5028a5ed, type: 3}
+  m_Script: {fileID: 11500000, guid: 8d60745f7af30f442893ab9e3bef1bdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _workers: []
   _type: 5
   _upkeep: 50
   _costMoney: 400
@@ -69,7 +70,7 @@ MonoBehaviour:
   _efficiency: 0
   _generationInterval: 30
   _outputCount: 1
-  _placement: 040000000300000005000000
+  _placement: 030000000400000005000000
   _scaleWithNeighbors: 0
   _maxNeighbors: 0
   input: 4

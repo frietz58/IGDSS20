@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8447883038012900003}
-  - component: {fileID: 5995704497754206192}
+  - component: {fileID: 209032105273072389}
   m_Layer: 0
   m_Name: Lumberjack
   m_TagString: Untagged
@@ -48,7 +48,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5995704497754206192
+--- !u!114 &209032105273072389
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -57,9 +57,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8447883038012900000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0429b4100d635944e8b42fdd5028a5ed, type: 3}
+  m_Script: {fileID: 11500000, guid: 8d60745f7af30f442893ab9e3bef1bdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _workers: []
   _type: 2
   _upkeep: 10
   _costMoney: 100
@@ -70,7 +71,7 @@ MonoBehaviour:
   _outputCount: 1
   _placement: 04000000
   _scaleWithNeighbors: 1
-  _maxNeighbors: 5
+  _maxNeighbors: 6
   input: 0
   output: 2
 --- !u!1001 &348598817243590728

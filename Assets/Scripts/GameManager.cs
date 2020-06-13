@@ -295,7 +295,7 @@ public class GameManager : MonoBehaviour
 
     // Variables needed for economy update
     public int seconds_past = 0;
-    public int playerMoney = 100;
+    public int playerMoney = 10000;
     public List<GameObject> upkeepBuildings = new List<GameObject>();
     private int updateAt = 0;
     #endregion
@@ -421,9 +421,9 @@ public class GameManager : MonoBehaviour
             //TODO: check if building can be placed and then istantiate it
             GameObject target_building = _buildingPrefabs[_selectedBuildingPrefabIndex];
 
-            if (target_building.GetComponent<Building>()._costMoney <= playerMoney &&
-                target_building.GetComponent<Building>()._costPlanks <= _resourcesInWarehouse[ResourceTypes.Planks] &&
-                target_building.GetComponent<Building>()._placement.Contains(clicked_tile._type))
+            if (target_building.GetComponent<ProductionBuilding>()._costMoney <= playerMoney &&
+                target_building.GetComponent<ProductionBuilding>()._costPlanks <= _resourcesInWarehouse[ResourceTypes.Planks] &&
+                target_building.GetComponent<ProductionBuilding>()._placement.Contains(clicked_tile._type))
             {
                 // instantiate building from prefab
                 GameObject newBuilding = Instantiate(target_building, clicked_tile._pos, Quaternion.identity);
@@ -432,11 +432,11 @@ public class GameManager : MonoBehaviour
                 Vector3 rot_Vec = new Vector3(0, -90, 0);
                 newBuilding.transform.rotation = Quaternion.Euler(rot_Vec);
 
-                playerMoney -= newBuilding.GetComponent<Building>()._costMoney;
-                _resourcesInWarehouse[ResourceTypes.Planks] -= newBuilding.GetComponent<Building>()._costPlanks;
+                playerMoney -= newBuilding.GetComponent<ProductionBuilding>()._costMoney;
+                _resourcesInWarehouse[ResourceTypes.Planks] -= newBuilding.GetComponent<ProductionBuilding>()._costPlanks;
 
-                newBuilding.GetComponent<Building>()._tile = clicked_tile;
-                newBuilding.GetComponent<Building>()._efficiency = calcEfficiency(newBuilding);
+                newBuilding.GetComponent<ProductionBuilding>()._tile = clicked_tile;
+                newBuilding.GetComponent<ProductionBuilding>()._efficiency = calcEfficiency(newBuilding);
 
                 upkeepBuildings.Add(newBuilding);
 
@@ -451,32 +451,32 @@ public class GameManager : MonoBehaviour
 
     private float calcEfficiency(GameObject b)
     {
-        if (!b.GetComponent<Building>()._scaleWithNeighbors)
+        if (!b.GetComponent<ProductionBuilding>()._scaleWithNeighbors)
         {
             return 1.0f;
         }
 
-        List<Tile> neighbors = FindNeighborsOfTile(b.GetComponent<Building>()._tile);
+        List<Tile> neighbors = FindNeighborsOfTile(b.GetComponent<ProductionBuilding>()._tile);
         List<Tile> scalingNeighbors = new List<Tile>();
 
-        if (b.GetComponent<Building>()._type == Building.BuildingTypes.Fishery)
+        if (b.GetComponent<ProductionBuilding>()._type == ProductionBuilding.BuildingTypes.Fishery)
         {
             scalingNeighbors = FindScalingNeighbors(Tile.TileTypes.Water, neighbors);
         }
-        else if (b.GetComponent<Building>()._type == Building.BuildingTypes.Lumberjack)
+        else if (b.GetComponent<ProductionBuilding>()._type == ProductionBuilding.BuildingTypes.Lumberjack)
         {
             scalingNeighbors = FindScalingNeighbors(Tile.TileTypes.Forest, neighbors);
         }
-        else if (b.GetComponent<Building>()._type == Building.BuildingTypes.SheepFarm)
+        else if (b.GetComponent<ProductionBuilding>()._type == ProductionBuilding.BuildingTypes.SheepFarm)
         {
             scalingNeighbors = FindScalingNeighbors(Tile.TileTypes.Grass, neighbors);
         }
-        else if (b.GetComponent<Building>()._type == Building.BuildingTypes.PotatoFarm)
+        else if (b.GetComponent<ProductionBuilding>()._type == ProductionBuilding.BuildingTypes.PotatoFarm)
         {
             scalingNeighbors = FindScalingNeighbors(Tile.TileTypes.Grass, neighbors);
         }
 
-        float efficency = (float)scalingNeighbors.Count / (float)b.GetComponent<Building>()._maxNeighbors;
+        float efficency = (float)scalingNeighbors.Count / (float)b.GetComponent<ProductionBuilding>()._maxNeighbors;
         if (efficency > 1)
         {
             efficency = 1;
@@ -579,23 +579,23 @@ public class GameManager : MonoBehaviour
         // generate resources produced by buildings
         foreach (GameObject building in upkeepBuildings)
         {
-            float generationInterval = building.GetComponent<Building>()._generationInterval / building.GetComponent<Building>()._efficiency;
+            float generationInterval = building.GetComponent<ProductionBuilding>()._generationInterval / building.GetComponent<ProductionBuilding>()._efficiency;
             if (seconds_past % generationInterval <= 0.1 && updateAt != seconds_past)
             {
                 // take away resource needed for production and produce only if input resource available
-                if (building.GetComponent<Building>().input != ResourceTypes.None)
+                if (building.GetComponent<ProductionBuilding>().input != ResourceTypes.None)
                 {
                     //Debug.Log("Requires input");
-                    if (_resourcesInWarehouse[building.GetComponent<Building>().input] >= 1)
+                    if (_resourcesInWarehouse[building.GetComponent<ProductionBuilding>().input] >= 1)
                     {
-                        _resourcesInWarehouse[building.GetComponent<Building>().input] -= 1;
-                        _resourcesInWarehouse[building.GetComponent<Building>().output] += building.GetComponent<Building>()._outputCount;
+                        _resourcesInWarehouse[building.GetComponent<ProductionBuilding>().input] -= 1;
+                        _resourcesInWarehouse[building.GetComponent<ProductionBuilding>().output] += building.GetComponent<ProductionBuilding>()._outputCount;
                     }
                 }
                 else //just produce all the time
                 {
                     //Debug.Log("Doesn't require input");
-                    _resourcesInWarehouse[building.GetComponent<Building>().output] += building.GetComponent<Building>()._outputCount;
+                    _resourcesInWarehouse[building.GetComponent<ProductionBuilding>().output] += building.GetComponent<ProductionBuilding>()._outputCount;
                 }
 
             }
@@ -607,7 +607,7 @@ public class GameManager : MonoBehaviour
             playerMoney += 100;
             foreach (GameObject building in upkeepBuildings)
             {
-                playerMoney -= building.GetComponent<Building>()._upkeep;
+                playerMoney -= building.GetComponent<ProductionBuilding>()._upkeep;
             }
         }
 

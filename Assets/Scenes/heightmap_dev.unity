@@ -504,7 +504,7 @@ MonoBehaviour:
   _ResourcesInWarehouse_Potato: 0
   _ResourcesInWarehouse_Schnapps: 0
   seconds_past: 0
-  playerMoney: 100
+  playerMoney: 1000
   upkeepBuildings: []
 --- !u!4 &1768092942
 Transform:
