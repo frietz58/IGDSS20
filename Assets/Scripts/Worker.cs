@@ -11,16 +11,22 @@ public class Worker : MonoBehaviour
 
     public float _age; // The age of this worker
     public float _happiness; // The happiness of this worker
+    public GameObject workerPrefab;
+
+    // Debug.Log("HEllo form worker");
 
     // Start is called before the first frame update
     void Start()
     {
+        _age = 0.0f;
+        _happiness = 1.0f;
     }
 
     // Update is called once per frame
     void Update()
     {
         Age();
+        Debug.Log("HEllo form worker");
     }
 
 
