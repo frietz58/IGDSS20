@@ -5,7 +5,7 @@ using UnityEngine;
 public class JobManager : MonoBehaviour
 {
 
-    private List<Job> _availableJobs = new List<Job>();
+    public List<Job> _availableJobs = new List<Job>();
     public List<Worker> _unoccupiedWorkers = new List<Worker>();
 
 
@@ -31,13 +31,29 @@ public class JobManager : MonoBehaviour
     {
         if (_unoccupiedWorkers.Count > 0)
         {
+            List<Worker> nowOccupied = new List<Worker>();
 
-            //TODO: What should be done with unoccupied workers?
-            
-            // assign workers to jobs
+            foreach (Worker unoccupiedWorker in _unoccupiedWorkers)
+            {
+                var random = new System.Random();
+                if (_availableJobs.Count > 0)
+                {
+                    int index = random.Next(_availableJobs.Count);
+                    Job randomJob = _availableJobs[index];
 
-            // set worker happiness score
+                    randomJob.AssignWorker(unoccupiedWorker);
+                    unoccupiedWorker.assignJob(randomJob);
+                    _availableJobs.Remove(randomJob);
 
+                    nowOccupied.Add(unoccupiedWorker); // only remove from list we are iterating over after iteration...
+                }
+            }
+
+            // now remove all workers that have been assgned a job from unassigned worker list
+            foreach (Worker w in nowOccupied)
+            {
+                _unoccupiedWorkers.Remove(w);
+            }
         }
     }
 

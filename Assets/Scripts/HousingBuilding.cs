@@ -26,12 +26,12 @@ public class HousingBuilding : Building
     void Update()
     {
         currSec = (int)Time.time;
-        calcEfficiency();
+        // calcEfficiency();
         generateWorkers();
         latestUpdateAt = currSec;
     }
 
-    public void calcEfficiency()
+    public override void calcEfficiency()  // override empty method from base class...
     {
         float efficiency = 0.0f;
         int workerCounter = 0;

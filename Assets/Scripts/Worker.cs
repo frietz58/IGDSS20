@@ -1,13 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Worker : MonoBehaviour
 {
     #region Manager References
     JobManager _jobManager; //Reference to the JobManager
     GameManager _gameManager; //Reference to the GameManager
-    public HousingBuilding _house; //Reference to house worker lives in
+    public Building _house; //Reference to house worker lives in
     #endregion
 
     public float _age; // The age of this worker
@@ -22,6 +20,7 @@ public class Worker : MonoBehaviour
     private bool isDead = false;
     private float nurishedCounter = 0; // gets increased when random resource was not available for consumption, decreases when consume was successful. range: [0, 0.5]
     private float hasJobScore = 0; // for happiness calculation. 0 if jobless worker, +0.5 if worker has job
+    private Job job;
 
     // Start is called before the first frame update
     void Start()
@@ -52,7 +51,7 @@ public class Worker : MonoBehaviour
 
     private void Age()
     {
-        //TODO: Implement a life cycle, where a Worker ages by 1 year every 15 real seconds.
+        //Implement a life cycle, where a Worker ages by 1 year every 15 real seconds.
         //When becoming of age, the worker enters the job market, and leaves it when retiring.
         //Eventually, the worker dies and leaves an empty space in his home. His Job occupation is also freed up.
         if ((currSec - birthTime) % 15 == 0 && currSec != latestUpdateAt)
@@ -65,20 +64,19 @@ public class Worker : MonoBehaviour
         {
             BecomeOfAge();
             isRegisteredWorker = true;
-            Debug.Log("Registering as worker");
+            //Debug.Log("Registering as worker");
         }
 
-        if (_age > 5 && isRegisteredWorker && !isRetired)
+        if (_age > 10 && isRegisteredWorker && !isRetired)
         {
             Retire();
             isRetired = true;
             isRegisteredWorker = false;
-            Debug.Log("Retiring");
+            //Debug.Log("Retiring");
         }
 
-        if (_age > 7 && !isDead)
+        if (_age > 12 && !isDead)
         {
-
             Die();
         }
     }
@@ -114,9 +112,15 @@ public class Worker : MonoBehaviour
         //Debug.Log(_happiness);
     }
 
-    public void setJobScore(int score)
+    public void assignJob(Job job)
     {
-        hasJobScore = score;
+        this.job = job;
+        hasJobScore = 0.5f;
+    }
+
+    public void removeJob()
+    {
+        hasJobScore = 0.0f;
     }
 
 
@@ -129,7 +133,11 @@ public class Worker : MonoBehaviour
     {   
         if (isRegisteredWorker)
         {
-            _jobManager.RemoveWorker(this);
+            _jobManager.RemoveWorker(this);  // means person will no longer look for job
+
+            job.RemoveWorker(this); //remove worker from the job he was at
+            _jobManager._availableJobs.Add(job); // make job available again for new workers on jobmanager
+
 
         }
     }
@@ -140,6 +148,7 @@ public class Worker : MonoBehaviour
         //_house._workers.RemoveAt(workerIndex);
         _house.WorkerRemovedFromBuilding(this);
         _gameManager.removeWorker(this); // remove worker from list of all workers in game manager
+
         Destroy(this.gameObject);
         isDead = true;
     }

@@ -22,9 +22,10 @@ public abstract class Building : MonoBehaviour
 
 
     #region Manager References
-    JobManager _jobManager; //Reference to the JobManager
+    //public JobManager _jobManager; //Reference to the JobManager
+    //public GameManager _gameManager; //Reference to the GameManager
     #endregion
-    
+
     #region Workers
     public List<Worker> _workers; //List of all workers associated with this building, either for work or living
     #endregion
@@ -40,6 +41,12 @@ public abstract class Building : MonoBehaviour
     #endregion
 
     #region Methods   
+
+    private void Update()
+    {
+        calcEfficiency();
+    }
+
     public void WorkerAssignedToBuilding(Worker w)
     {
         _workers.Add(w);
@@ -48,6 +55,11 @@ public abstract class Building : MonoBehaviour
     public void WorkerRemovedFromBuilding(Worker w)
     {
         _workers.Remove(w);
-    }    
+    }
+
+    public virtual void calcEfficiency()
+    {
+        // just here for the override, see Housing and ProductionBuilding^^
+    }
     #endregion
 }

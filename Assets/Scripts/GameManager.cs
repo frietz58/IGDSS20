@@ -442,22 +442,16 @@ public class GameManager : MonoBehaviour
                 newBuilding.GetComponent<Building>()._tile = clicked_tile;
                 //newBuilding.GetComponent<ProductionBuilding>()._efficiency = calcEfficiency(newBuilding);
 
-                if (newBuilding.GetComponent<Building>()._type == Building.BuildingTypes.Residency)
-                {
-                    //spawn workers
-                    //Worker worker_a = new Worker
-                    //Worker worker_b = new Worker(); 
-                    //newBuilding.GetComponent<HousingBuilding>()._workers.Add(worker_a);
-                    //newBuilding.GetComponent<HousingBuilding>()._workers.Add(worker_b);
-                }
+                newBuilding.GetComponent<Building>().calcEfficiency();
 
-                if (newBuilding.GetType() == typeof(ProductionBuilding))
-                {
-                    newBuilding.GetComponent<ProductionBuilding>().calcEfficiency(FindNeighborsOfTile(clicked_tile));
-                } else
-                {
-                    newBuilding.GetComponent<HousingBuilding>().calcEfficiency();
-                }
+                //if (newBuilding.GetType() == typeof(ProductionBuilding))
+                //{
+                //newBuilding.GetComponent<ProductionBuilding>().calcEfficiency();
+                //}
+                //else
+                //{
+                //newBuilding.GetComponent<HousingBuilding>().calcEfficiency();
+                //}
 
                 upkeepBuildings.Add(newBuilding);
 
@@ -471,7 +465,7 @@ public class GameManager : MonoBehaviour
     }
 
     //Returns a list of all neighbors of a given tile
-    private List<Tile> FindNeighborsOfTile(Tile t)
+    public List<Tile> FindNeighborsOfTile(Tile t)
     {
         List<Tile> result = new List<Tile>();
 
