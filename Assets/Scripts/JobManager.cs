@@ -33,6 +33,10 @@ public class JobManager : MonoBehaviour
         {
 
             //TODO: What should be done with unoccupied workers?
+            
+            // assign workers to jobs
+
+            // set worker happiness score
 
         }
     }

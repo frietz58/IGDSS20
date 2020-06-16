@@ -583,7 +583,6 @@ public class GameManager : MonoBehaviour
                     //Debug.Log("Doesn't require input");
                     _resourcesInWarehouse[building.GetComponent<Building>().output] += building.GetComponent<Building>()._outputCount;
                 }
-
             }
         }
 
@@ -602,9 +601,24 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public GameObject getWorkerPrefab()
+    public bool workerConsumeRandom()
     {
-        return workerPrefab;
+        var random = new System.Random();
+        var consumableResoucres = new List<ResourceTypes> { ResourceTypes.Fish, ResourceTypes.Clothes, ResourceTypes.Schnapps };
+        int index = random.Next(consumableResoucres.Count);
+
+        bool could_consume = false;
+        if (_resourcesInWarehouse[consumableResoucres[index]] >=1)
+        {
+            _resourcesInWarehouse[consumableResoucres[index]] -= 1;
+            could_consume = true;
+            Debug.Log("omnomnom...");
+        }
+
+        return could_consume;
+       
+
     }
+
     #endregion
 }
