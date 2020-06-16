@@ -23,6 +23,9 @@ public class GameManager : MonoBehaviour
     public float row_offset_x = 8.65f;
     public int col_offset_z = 10;
 
+    // all the workers for economy ticks
+    public List<Worker> allWorkers = new List<Worker>();
+
     //references to all the prefabs
     public GameObject waterPrefab;
     public GameObject sandPrefab;
@@ -594,6 +597,9 @@ public class GameManager : MonoBehaviour
             {
                 playerMoney -= building.GetComponent<Building>()._upkeep;
             }
+
+            // generate additional income for each worker
+            playerMoney += allWorkers.Count;
         }
 
         // makes sure we produce at most once epr second
@@ -601,6 +607,7 @@ public class GameManager : MonoBehaviour
 
     }
 
+    // Randomly consume one of the resources workers consume. Return status depending on resources was available (worker could eat) or not
     public bool workerConsumeRandom()
     {
         var random = new System.Random();
@@ -618,6 +625,17 @@ public class GameManager : MonoBehaviour
         return could_consume;
        
 
+    }
+
+    // adds a worker instance to the list of all workers
+    public void registerWorker(Worker w)
+    {
+        allWorkers.Add(w);
+    }
+
+    public void removeWorker(Worker w)
+    {
+        allWorkers.Remove(w);
     }
 
     #endregion

@@ -14,15 +14,14 @@ public class Worker : MonoBehaviour
     public float _happiness; // The happiness of this worker
     public int consumeRate = 15; // rate at which worker consumes resources in seconds
     public bool isRegisteredWorker = false; // worker is registered in jobmanger
-    public int workerIndex; // the index in the list of workers of the building the worker lives at
 
     private int birthTime;  //game time when worker is created
     private int currSec = 0;  // current game time second
     private int latestUpdateAt = 0; // second at which worker was last updated
     private bool isRetired = false; // worker is too old to work
     private bool isDead = false;
-    private float nurishedCounter = 0; // gets increased when random resource was not available for consumption, decreases when consume was successful. range: [-0.5, 0.5]
-    private float hasJobScore = 0; // for happiness calculation. -0.5 if jobless worker, +0.5 if worker has job
+    private float nurishedCounter = 0; // gets increased when random resource was not available for consumption, decreases when consume was successful. range: [0, 0.5]
+    private float hasJobScore = 0; // for happiness calculation. 0 if jobless worker, +0.5 if worker has job
 
     // Start is called before the first frame update
     void Start()
@@ -31,8 +30,12 @@ public class Worker : MonoBehaviour
         _happiness = 1.0f;
         birthTime = (int)Time.time;
         latestUpdateAt = birthTime; //to avoid ticks when we just created the gameobject
+        
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         _jobManager = GameObject.Find("JobManager").GetComponent<JobManager>();
+
+        _gameManager.registerWorker(this); // add worker instance to list of all workers on game manager
+
     }
 
     // Update is called once per frame
@@ -90,7 +93,7 @@ public class Worker : MonoBehaviour
             //update nurishedCounter depending on whether we could consume a resource or not...
             if (!could_consume)
             {
-                if (nurishedCounter > -0.5f) // cap rang to [-0.5, 0.5]
+                if (nurishedCounter > 0.0) // cap rang to [0, 0.5]
                 {
                     nurishedCounter -= 0.1f;
                 }
@@ -136,6 +139,7 @@ public class Worker : MonoBehaviour
         //_house._workers.Remove(this);
         //_house._workers.RemoveAt(workerIndex);
         _house.WorkerRemovedFromBuilding(this);
+        _gameManager.removeWorker(this); // remove worker from list of all workers in game manager
         Destroy(this.gameObject);
         isDead = true;
     }
