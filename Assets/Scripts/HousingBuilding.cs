@@ -14,8 +14,10 @@ public class HousingBuilding : Building
 
 
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+        
         spawnWorker();
         spawnWorker();
         birthTime = (int)Time.time;

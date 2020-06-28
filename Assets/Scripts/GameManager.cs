@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
 {
 
     #region Map Generation
-    private Tile[,] _tileMap; //2D array of all spawned tiles
+    public Tile[,] _tileMap; //2D array of all spawned tiles
     Texture2D heightmap = null;
     
     // heightmap contains values between 0 and 1, we want greater height differences, so we scale the height values
@@ -41,9 +41,9 @@ public class GameManager : MonoBehaviour
         bool verbose = false;
 
         byte[] fileData;
-        if (File.Exists("Assets/Textures/Heightmap_16.png"))
+        if (File.Exists("Assets/Textures/Heightmap_32.png"))
         {
-            fileData = File.ReadAllBytes("Assets/Textures/Heightmap_128.png");
+            fileData = File.ReadAllBytes("Assets/Textures/Heightmap_32.png");
             heightmap = new Texture2D(2, 2);
             heightmap.LoadImage(fileData); //..this will auto-resize the texture dimensions.
 

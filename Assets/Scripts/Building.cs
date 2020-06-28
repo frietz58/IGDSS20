@@ -19,6 +19,7 @@ public abstract class Building : MonoBehaviour
     public GameManager.ResourceTypes[] input; // Resource type of input resources needed
     public GameManager.ResourceTypes output; // Resource type of output resources
 
+    public int[,] _potentialField; // Potential field to get to building
 
 
     #region Manager References
@@ -41,6 +42,13 @@ public abstract class Building : MonoBehaviour
     #endregion
 
     #region Methods   
+
+    protected virtual void Start()
+    {
+        GameManager _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        _potentialField = PotentialField.createPotentialField(_gameManager._tileMap, _tile);
+        PotentialField.Print2DArray<int>(_potentialField);
+    }
 
     private void Update()
     {

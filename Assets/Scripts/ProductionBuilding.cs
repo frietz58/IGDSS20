@@ -15,9 +15,11 @@ public class ProductionBuilding : Building
     private int num_jobs;
     #endregion
 
-    private void Start()
+    protected override void Start()
     {
 
+        base.Start();
+        
         _jobManager = GameObject.Find("JobManager").GetComponent<JobManager>();
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
