@@ -12,6 +12,7 @@ public class Worker : MonoBehaviour
     public float _happiness; // The happiness of this worker
     public int consumeRate = 15; // rate at which worker consumes resources in seconds
     public bool isRegisteredWorker = false; // worker is registered in jobmanger
+    public GameObject gameObject;
 
     private int birthTime;  //game time when worker is created
     private int currSec = 0;  // current game time second
@@ -21,6 +22,11 @@ public class Worker : MonoBehaviour
     private float nurishedCounter = 0; // gets increased when random resource was not available for consumption, decreases when consume was successful. range: [0, 0.5]
     private float hasJobScore = 0; // for happiness calculation. 0 if jobless worker, +0.5 if worker has job
     private Job job;
+    private Tile _currentTile;
+    private bool isAtGoal = true;
+    private float moveSpeed = 0.05f;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +41,8 @@ public class Worker : MonoBehaviour
 
         _gameManager.registerWorker(this); // add worker instance to list of all workers on game manager
 
+        _currentTile = _house._tile;
+
     }
 
     // Update is called once per frame
@@ -44,8 +52,58 @@ public class Worker : MonoBehaviour
         Age();
         Consume();
         updateHappiness();
+
+        if (hasJobScore == 0.5f)
+        {
+            int[,] potential_field = job._building._potentialField;
+            GoToTile(potential_field);
+        } else
+        {
+            int[,] potential_field = _house._potentialField;
+            GoToTile(potential_field);
+        }
+
         latestUpdateAt = currSec;
 
+    }
+
+
+    private void GoToTile(int[,] potentialField)
+    {
+        int best = 100;
+        Tile bestTile = _currentTile;
+
+        if (!isAtGoal)
+        {
+            foreach (Tile nTile in _currentTile._neighborTiles)
+            {
+                int val_on_field = potentialField[nTile._coordinateWidth, nTile._coordinateHeight];
+                if (val_on_field < best)
+                {
+                    best = val_on_field;
+                    bestTile = nTile;
+
+                    
+                }
+            }
+
+            Vector3 heading = bestTile.transform.position - gameObject.transform.position;
+            heading = Vector3.Normalize(heading);
+
+
+            gameObject.transform.position += heading * moveSpeed;
+            gameObject.transform.rotation = Quaternion.FromToRotation(Vector3.forward, heading);
+            if (Vector3.Distance(gameObject.transform.position, bestTile.transform.position) < 0.1)
+            {
+                _currentTile = bestTile;
+                if (best == 0)
+                {
+                    isAtGoal = true;
+                }
+            }
+
+           
+        }
     }
 
 
@@ -60,22 +118,25 @@ public class Worker : MonoBehaviour
             //Debug.Log("I've aged!");
         }
 
-        if (_age > 3 && !isRegisteredWorker && !isRetired)
+        if (_age > 1 && !isRegisteredWorker && !isRetired)
         {
             BecomeOfAge();
             isRegisteredWorker = true;
+            isAtGoal = false;
+
             //Debug.Log("Registering as worker");
         }
 
-        if (_age > 10 && isRegisteredWorker && !isRetired)
+        if (_age > 3 && isRegisteredWorker && !isRetired)
         {
             Retire();
             isRetired = true;
             isRegisteredWorker = false;
             //Debug.Log("Retiring");
+            isAtGoal = false; // so that worker moves back to home...
         }
 
-        if (_age > 12 && !isDead)
+        if (_age > 4 && !isDead)
         {
             Die();
         }
@@ -137,8 +198,6 @@ public class Worker : MonoBehaviour
 
             job.RemoveWorker(this); //remove worker from the job he was at
             _jobManager._availableJobs.Add(job); // make job available again for new workers on jobmanager
-
-
         }
     }
 

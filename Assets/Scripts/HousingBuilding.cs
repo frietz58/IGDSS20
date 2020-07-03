@@ -65,6 +65,7 @@ public class HousingBuilding : Building
         GameObject prefab = GameObject.Find("GameManager").GetComponent<GameManager>().workerPrefab;
         var workerGameObject = Instantiate(prefab, _tile.transform.position, Quaternion.identity);
         Worker workerInstance = workerGameObject.GetComponent<Worker>();
+        workerInstance.gameObject = workerGameObject;
         workerInstance._house = this;
 
         _workers.Add(workerInstance);

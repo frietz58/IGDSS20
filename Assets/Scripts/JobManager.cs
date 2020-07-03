@@ -67,6 +67,7 @@ public class JobManager : MonoBehaviour
     public void RemoveWorker(Worker w)
     {
         _unoccupiedWorkers.Remove(w);
+        w.removeJob();
     }
 
     #endregion

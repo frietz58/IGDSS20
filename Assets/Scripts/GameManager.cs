@@ -152,7 +152,7 @@ public class GameManager : MonoBehaviour
             }
             else if (tile._type == Tile.TileTypes.Mountain)
             {
-                Debug.Log(tile._type);
+                // Debug.Log(tile._type);
                 spawn_tries = 1;
                 keep_prob = 1;
                 max_random_offset = 0; // spawn beacon always at center of mountain :D
@@ -613,7 +613,6 @@ public class GameManager : MonoBehaviour
         {
             _resourcesInWarehouse[consumableResoucres[index]] -= 1;
             could_consume = true;
-            Debug.Log("omnomnom...");
         }
 
         return could_consume;

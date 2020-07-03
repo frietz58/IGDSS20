@@ -82,7 +82,7 @@ public class PotentialField : MonoBehaviour
                 str += matrix[i,j].ToString();
                 str += " ";
             }
-            Debug.Log(str);
+            // Debug.Log(str);
         }
     }
 }
