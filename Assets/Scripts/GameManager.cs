@@ -23,9 +23,6 @@ public class GameManager : MonoBehaviour
     public float row_offset_x = 8.65f;
     public int col_offset_z = 10;
 
-    // all the workers for economy ticks
-    public List<Worker> allWorkers = new List<Worker>();
-
     //references to all the prefabs
     public GameObject waterPrefab;
     public GameObject sandPrefab;
@@ -302,6 +299,8 @@ public class GameManager : MonoBehaviour
     public int playerMoney = 10000;
     public List<GameObject> upkeepBuildings = new List<GameObject>();
     private int updateAt = 0;
+    // all the workers for economy ticks
+    public List<Worker> workerPopulation = new List<Worker>();
     #endregion
 
     #region Enumerations
@@ -417,8 +416,6 @@ public class GameManager : MonoBehaviour
     //Checks if the currently selected building type can be placed on the given tile and then instantiates an instance of the prefab
     private void PlaceBuildingOnTile(Tile clicked_tile)
     {
-
-
         //if there is building prefab for the number input
         if (_selectedBuildingPrefabIndex < _buildingPrefabs.Length)
         {
@@ -443,16 +440,6 @@ public class GameManager : MonoBehaviour
                 //newBuilding.GetComponent<ProductionBuilding>()._efficiency = calcEfficiency(newBuilding);
 
                 newBuilding.GetComponent<Building>().calcEfficiency();
-
-                //if (newBuilding.GetType() == typeof(ProductionBuilding))
-                //{
-                //newBuilding.GetComponent<ProductionBuilding>().calcEfficiency();
-                //}
-                //else
-                //{
-                //newBuilding.GetComponent<HousingBuilding>().calcEfficiency();
-                //}
-
                 upkeepBuildings.Add(newBuilding);
 
                 // destroy random props on tile
@@ -593,7 +580,7 @@ public class GameManager : MonoBehaviour
             }
 
             // generate additional income for each worker
-            playerMoney += allWorkers.Count;
+            playerMoney += workerPopulation.Count;
         }
 
         // makes sure we produce at most once epr second
@@ -623,12 +610,12 @@ public class GameManager : MonoBehaviour
     // adds a worker instance to the list of all workers
     public void registerWorker(Worker w)
     {
-        allWorkers.Add(w);
+        workerPopulation.Add(w);
     }
 
     public void removeWorker(Worker w)
     {
-        allWorkers.Remove(w);
+        workerPopulation.Remove(w);
     }
 
     #endregion
