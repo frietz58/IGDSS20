@@ -91,8 +91,8 @@ public class MouseManager : MonoBehaviour
                         Debug.LogFormat(msg1, t._type, t._coordinateWidth, t._coordinateHeight);
                     }
 
-                    var highlighter = t.GetComponent<HighlightObject>();
-                    highlighter.timedHighlight();
+                    //var highlighter = t.GetComponent<HighlightObject>();
+                    //highlighter.timedHighlight();
                 }
 
                 gameManager.TileClicked(hit.collider.GetComponent<Tile>()._coordinateHeight, hit.collider.GetComponent<Tile>()._coordinateWidth);

@@ -520,6 +520,7 @@ MonoBehaviour:
   lastColPos: 0
   row_offset_x: 8.65
   col_offset_z: 10
+  allWorkers: []
   waterPrefab: {fileID: 2064574628029001573, guid: 2a914b6a4ef15cb4ca77257050f15f29,
     type: 3}
   sandPrefab: {fileID: 6461190606886679958, guid: ff7ef13f88a71c94eb42898019398dcd,

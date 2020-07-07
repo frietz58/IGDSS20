@@ -12,12 +12,145 @@ public class Tile : MonoBehaviour
     public int _coordinateWidth; //The coordinate on the x-axis on the tile grid (not world coordinates)
     public Vector3 _pos; // the pos vector
     public GameObject[] randomPropPrefabs; // array of undefined length can be given references to Prefabs to spawn on the tile (in inspector)
+    public GameObject zPosEdge;
+    public GameObject zNegEdge;
+    public GameObject zPosXPosEdge;
+    public GameObject zNegXPosEdge;
+    public GameObject zPosXNegEdge;
+    public GameObject zNegXNegEdge;
     public List<GameObject> _spawnedRandomGameObjects; // A list of the actually instantiated GameObjects on the tile
+    private List<GameObject> edges_old;
+    public GameObject[] edges;
+    LineRenderer lineRenderer;
     #endregion
 
     #region Enumerations
     public enum TileTypes { Empty, Water, Sand, Grass, Forest, Stone, Mountain }; //Enumeration of all available tile types. Can be addressed from other scripts by calling Tile.Tiletypes
+
     #endregion
 
-    //This class acts as a data container and has no functionality
+    //This returns the angle in radians
+    public static float AngleInRad(Vector3 vec1, Vector3 vec2)
+    {
+        return Mathf.Atan2(vec2.y - vec1.y, vec2.x - vec1.x);
+    }
+
+
+    //This returns the angle in degrees
+    public static float AngleInDeg(Vector3 vec1, Vector3 vec2)
+    {
+        return AngleInRad(vec1, vec2) * 180 / Mathf.PI;
+    }
+
+
+    public void colorEdges()
+    {
+        /* WHY TF IS E.TRANSFORM.POSITION NOT CORRECT?????????????????????
+         * Now I have to do it the ugly way, yîkés
+        foreach(GameObject e in edges)
+        {
+            float dist = 1000.0f;
+            Tile closestNeighbor = _neighborTiles[0];
+            Debug.Log("ind hw: " + _coordinateHeight + "," + _coordinateWidth + " edge: " + e.transform.position.ToString("F4"));
+            Debug.DrawLine(e.transform.position, e.transform.forward + e.transform.position, Color.green, 60);
+
+            foreach (Tile n in _neighborTiles)
+            {   
+
+                float dist_to_n = Vector3.Distance(e.transform.position, n.transform.position);
+                if (dist_to_n < dist)
+                {
+                    dist = dist_to_n;
+                    closestNeighbor = n;
+                }
+            }
+
+            if (closestNeighbor._type == _type)
+            {
+                e.active = false;
+            }
+        }
+        */
+
+        foreach (Tile neighbor in _neighborTiles)
+        {
+            if (_type == neighbor._type)
+            {
+                // compare the indices of the neighbors on the lattice to figure out which edge to deactivate
+                // this also means that we again have to do this seperately for even and odd rows :/
+                if (_coordinateHeight % 2 == 0) // use even neighbor indices
+                {
+                    if (_coordinateHeight -1 == neighbor._coordinateHeight && _coordinateWidth == neighbor._coordinateWidth)
+                    {
+                        //neighbor.GetComponent<MeshRenderer>().materials[1].color = new Color(1f, 0.64f, 0f, 0.8f);
+                        zNegXNegEdge.active = false;
+
+                    } 
+                    else if (_coordinateHeight - 1 == neighbor._coordinateHeight && _coordinateWidth + 1 == neighbor._coordinateWidth)
+                    {
+                        //neighbor.GetComponent<MeshRenderer>().materials[1].color = new Color(1f, 0.64f, 0f, 0.8f);
+                        zPosXNegEdge.active = false;
+                    }
+                    else if (_coordinateHeight == neighbor._coordinateHeight && _coordinateWidth - 1 == neighbor._coordinateWidth)
+                    {
+                        //neighbor.GetComponent<MeshRenderer>().materials[1].color = new Color(1f, 0.64f, 0f, 0.8f);
+                        zNegEdge.active = false;
+                    }
+                    else if (_coordinateHeight == neighbor._coordinateHeight && _coordinateWidth + 1 == neighbor._coordinateWidth)
+                    {
+                        //neighbor.GetComponent<MeshRenderer>().materials[1].color = new Color(1f, 0.64f, 0f, 0.8f);
+                        zPosEdge.active = false;
+                    }
+                    else if (_coordinateHeight + 1 == neighbor._coordinateHeight && _coordinateWidth == neighbor._coordinateWidth)
+                    {
+                        //neighbor.GetComponent<MeshRenderer>().materials[1].color = new Color(1f, 0.64f, 0f, 0.8f);
+                        zNegXPosEdge.active = false;
+                    }
+                    else if (_coordinateHeight + 1 == neighbor._coordinateHeight && _coordinateWidth  + 1 == neighbor._coordinateWidth)
+                    {
+                        //neighbor.GetComponent<MeshRenderer>().materials[1].color = new Color(1f, 0.64f, 0f, 0.8f);
+                        zPosXPosEdge.active = false;
+                    }
+                }
+                else // use odd neighbor indices
+                {
+                    if (_coordinateHeight - 1 == neighbor._coordinateHeight && _coordinateWidth - 1 == neighbor._coordinateWidth)
+                    {
+                        //neighbor.GetComponent<MeshRenderer>().materials[1].color = new Color(1f, 0.64f, 0f, 0.8f);
+                        zNegXNegEdge.active = false;
+
+                    }
+                    else if (_coordinateHeight - 1 == neighbor._coordinateHeight && _coordinateWidth == neighbor._coordinateWidth)
+                    {
+                        //neighbor.GetComponent<MeshRenderer>().materials[1].color = new Color(1f, 0.64f, 0f, 0.8f);
+                        zPosXNegEdge.active = false;
+                    }
+                    else if (_coordinateHeight == neighbor._coordinateHeight && _coordinateWidth - 1 == neighbor._coordinateWidth)
+                    {
+                        //neighbor.GetComponent<MeshRenderer>().materials[1].color = new Color(1f, 0.64f, 0f, 0.8f);
+                        zNegEdge.active = false;
+                    }
+                    else if (_coordinateHeight == neighbor._coordinateHeight && _coordinateWidth + 1 == neighbor._coordinateWidth)
+                    {
+                        //neighbor.GetComponent<MeshRenderer>().materials[1].color = new Color(1f, 0.64f, 0f, 0.8f);
+                        zPosEdge.active = false;
+                    }
+                    else if (_coordinateHeight + 1 == neighbor._coordinateHeight && _coordinateWidth - 1 == neighbor._coordinateWidth)
+                    {
+                        //neighbor.GetComponent<MeshRenderer>().materials[1].color = new Color(1f, 0.64f, 0f, 0.8f);
+                        zNegXPosEdge.active = false;
+                    }
+                    else if (_coordinateHeight + 1 == neighbor._coordinateHeight && _coordinateWidth == neighbor._coordinateWidth)
+                    {
+                        //neighbor.GetComponent<MeshRenderer>().materials[1].color = new Color(1f, 0.64f, 0f, 0.8f);
+                        zPosXPosEdge.active = false;
+                    }
+                }
+                
+            }
+        }
+
+    }
+
+
 }

@@ -118,6 +118,8 @@ public class GameManager : MonoBehaviour
             foreach (Tile tileEntity in _tileMap)
             {
                 tileEntity._neighborTiles = FindNeighborsOfTile(tileEntity);
+                tileEntity.colorEdges();
+
             }
         }
     }

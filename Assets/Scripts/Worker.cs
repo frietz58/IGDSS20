@@ -24,7 +24,7 @@ public class Worker : MonoBehaviour
     private Job job;
     private Tile _currentTile;
     private bool isAtGoal = true;
-    private float moveSpeed = 0.05f;
+    private float moveSpeed = 0.1f;
 
 
 
@@ -136,7 +136,7 @@ public class Worker : MonoBehaviour
             isAtGoal = false; // so that worker moves back to home...
         }
 
-        if (_age > 4 && !isDead)
+        if (_age > 6 && !isDead)
         {
             Die();
         }
