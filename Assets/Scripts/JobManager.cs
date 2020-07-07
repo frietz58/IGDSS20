@@ -4,11 +4,8 @@ using UnityEngine;
 
 public class JobManager : MonoBehaviour
 {
-
     public List<Job> _availableJobs = new List<Job>();
     public List<Worker> _unoccupiedWorkers = new List<Worker>();
-
-
 
     #region MonoBehaviour
     // Start is called before the first frame update
@@ -62,13 +59,10 @@ public class JobManager : MonoBehaviour
         _unoccupiedWorkers.Add(w);
     }
 
-
-
     public void RemoveWorker(Worker w)
     {
         _unoccupiedWorkers.Remove(w);
         w.removeJob();
     }
-
     #endregion
 }

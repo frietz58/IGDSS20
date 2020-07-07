@@ -70,8 +70,8 @@ public class Worker : MonoBehaviour
 
     private void GoToTile(int[,] potentialField)
     {
-        int best = 100;
         Tile bestTile = _currentTile;
+        int best = potentialField[bestTile._coordinateWidth, bestTile._coordinateHeight] + 100;
 
         if (!isAtGoal)
         {
