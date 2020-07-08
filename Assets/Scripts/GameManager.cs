@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -296,6 +297,17 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private float _ResourcesInWarehouse_Schnapps;
 
+    public Text fishCountText;
+    public Text woodCountText;
+    public Text plankCountText;
+    public Text woolCountText;
+    public Text clothCountText;
+    public Text potatoCountText;
+    public Text schnappsCountText;
+
+    public Text moneyCountText;
+    public Text workerCountText;
+
     // Variables needed for economy update
     public int seconds_past = 0;
     public int playerMoney = 10000;
@@ -323,6 +335,8 @@ public class GameManager : MonoBehaviour
         HandleKeyboardInput();
         UpdateInspectorNumbersForResources();
         updateEconomy();
+        updateUICounters();
+
     }
     #endregion
 
@@ -383,10 +397,11 @@ public class GameManager : MonoBehaviour
         {
             _selectedBuildingPrefabIndex = 9;
         }
+    }
 
-        //string msg1 = "Selected building: {0}";
-        //Debug.LogFormat(string.Format(msg1, _buildingPrefabs[_selectedBuildingPrefabIndex]));
-
+    public void UI_setBuildingIndex(int i)
+    {
+        _selectedBuildingPrefabIndex = i;
     }
 
     //Updates the visual representation of the resource dictionary in the inspector. Only for debugging
@@ -399,6 +414,21 @@ public class GameManager : MonoBehaviour
         _ResourcesInWarehouse_Clothes = _resourcesInWarehouse[ResourceTypes.Clothes];
         _ResourcesInWarehouse_Potato = _resourcesInWarehouse[ResourceTypes.Potato];
         _ResourcesInWarehouse_Schnapps = _resourcesInWarehouse[ResourceTypes.Schnapps];
+    }
+
+    void updateUICounters()
+    {
+        // set text to number of items in warehouse
+        fishCountText.text = _ResourcesInWarehouse_Fish.ToString();
+        woodCountText.text = _ResourcesInWarehouse_Wood.ToString();
+        plankCountText.text = _ResourcesInWarehouse_Planks.ToString();
+        woolCountText.text = _ResourcesInWarehouse_Wool.ToString();
+        clothCountText.text = _ResourcesInWarehouse_Clothes.ToString();
+        potatoCountText.text = _ResourcesInWarehouse_Potato.ToString();
+        schnappsCountText.text = _ResourcesInWarehouse_Schnapps.ToString();
+
+        moneyCountText.text = playerMoney.ToString();
+        workerCountText.text = workerPopulation.Count.ToString();
     }
 
     //Checks if there is at least one material for the queried resource type in the warehouse
