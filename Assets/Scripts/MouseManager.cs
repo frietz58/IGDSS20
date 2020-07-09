@@ -8,7 +8,7 @@ public class MouseManager : MonoBehaviour
     #region Attributes
     public GameManager gameManager;
     public float mouseSpeed = 150.0f;
-    public float scrollSpeed = 10.0f;
+    public float scrollSpeed = 1000.0f;
 
     float boundaryConstant = 50.0f;
 
@@ -48,8 +48,8 @@ public class MouseManager : MonoBehaviour
             minX = gameManager.firstRowPos - boundaryConstant;
             maxZ = gameManager.lastColPos + boundaryConstant;
             minZ = gameManager.firstColPos - boundaryConstant;
-            minY = 20f;
-            maxY = 250f;
+            minY = 45f;
+            maxY = 120f;
         }
 
         if (Input.GetMouseButton(1))
