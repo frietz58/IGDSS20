@@ -5,6 +5,7 @@ using System.Threading;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class GameManager : MonoBehaviour
     #region Map Generation
     public Tile[,] _tileMap; //2D array of all spawned tiles
     Texture2D heightmap = null;
-    
+
     // heightmap contains values between 0 and 1, we want greater height differences, so we scale the height values
     public int heightmapScaleFactor = 50;
     public float firstRowPos = 0f;
@@ -125,7 +126,8 @@ public class GameManager : MonoBehaviour
     void populateTileRandomly(Tile tile)
     {
         // not all tiles have random gameobjects to spawn...
-        if (!(tile.randomPropPrefabs.Length == 0)){
+        if (!(tile.randomPropPrefabs.Length == 0))
+        {
 
             int spawn_tries = 0;  // number of times we try to spawn a prop
             float keep_prob = 0.0f; // probability for actually spawning the prop
@@ -140,7 +142,8 @@ public class GameManager : MonoBehaviour
                 random_rotation_range.x = 20;
                 random_rotation_range.z = 20;
 
-            } else if (tile._type == Tile.TileTypes.Grass)
+            }
+            else if (tile._type == Tile.TileTypes.Grass)
             {
                 spawn_tries = 10;
                 keep_prob = 0.8f;
@@ -162,7 +165,7 @@ public class GameManager : MonoBehaviour
             //{
 
             //Debug.Log(tile._type);
-                
+
             // apparently we need a generator for random values ? -.-
             System.Random rand = new System.Random();
 
@@ -180,7 +183,7 @@ public class GameManager : MonoBehaviour
                     // get random position for GameObject on, based on width and height of tile
                     Vector3 prop_pos = new Vector3(
                         // UnityEngine.Random.Range only works in positive range, so we have to shift afterwards to get values +- zero...
-                        UnityEngine.Random.Range(0, max_random_offset) - (max_random_offset / 2f) + tile._pos.x, 
+                        UnityEngine.Random.Range(0, max_random_offset) - (max_random_offset / 2f) + tile._pos.x,
                         tile._pos.y,
                         UnityEngine.Random.Range(0, max_random_offset) - (max_random_offset / 2f) + tile._pos.z
                         );
@@ -191,13 +194,13 @@ public class GameManager : MonoBehaviour
 
                     var random_prop = Instantiate(
                         random_gameobject,
-                        prop_pos, 
+                        prop_pos,
                         Quaternion.Euler(
                             UnityEngine.Random.Range(0, random_rotation_range.x) - random_rotation_range.x / 2,
                             UnityEngine.Random.Range(0, random_rotation_range.y),
                             UnityEngine.Random.Range(0, random_rotation_range.z) - random_rotation_range.z / 2)
                         );
-                        
+
                     // set the correspondting tile as parent (mainly to keep hierarchy nicely structured)
                     random_prop.transform.parent = tile.transform;
 
@@ -296,7 +299,9 @@ public class GameManager : MonoBehaviour
     private float _ResourcesInWarehouse_Potato;
     [SerializeField]
     private float _ResourcesInWarehouse_Schnapps;
+    #endregion
 
+    #region UI
     public Text fishCountText;
     public Text woodCountText;
     public Text plankCountText;
@@ -308,13 +313,19 @@ public class GameManager : MonoBehaviour
     public Text moneyCountText;
     public Text workerCountText;
 
+    public GameObject gameOverUI;
+    public GameObject winGameUI;
+    #endregion
+
+    #region Economy
     // Variables needed for economy update
     public int seconds_past = 0;
+    private int updateAt = 0;
     public int playerMoney = 10000;
     public List<GameObject> upkeepBuildings = new List<GameObject>();
-    private int updateAt = 0;
-    // all the workers for economy ticks
     public List<Worker> workerPopulation = new List<Worker>();
+    private bool gameHasEnded = false;
+    private float restartDelay = 2f;
     #endregion
 
     #region Enumerations
@@ -332,11 +343,14 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HandleKeyboardInput();
-        UpdateInspectorNumbersForResources();
-        updateEconomy();
-        updateUICounters();
-
+        CheckGameState();
+        if (gameHasEnded == false)
+        {
+            HandleKeyboardInput();
+            UpdateInspectorNumbersForResources();
+            updateEconomy();
+            updateUICounters();
+        }
     }
     #endregion
 
@@ -570,12 +584,13 @@ public class GameManager : MonoBehaviour
                 {
                     //Debug.Log("Requires input");
                     Boolean can_produce = true;
-                    foreach ( ResourceTypes resource in building.GetComponent<Building>().input)
+                    foreach (ResourceTypes resource in building.GetComponent<Building>().input)
                     {
                         if (_resourcesInWarehouse[resource] <= 1)
                         {
                             can_produce = false;
-                        } else
+                        }
+                        else
                         {
                             // TODO: maybe balance this so that we only consume on production...
                             _resourcesInWarehouse[resource] -= 1;
@@ -628,14 +643,14 @@ public class GameManager : MonoBehaviour
         int index = random.Next(consumableResoucres.Count);
 
         bool could_consume = false;
-        if (_resourcesInWarehouse[consumableResoucres[index]] >=1)
+        if (_resourcesInWarehouse[consumableResoucres[index]] >= 1)
         {
             _resourcesInWarehouse[consumableResoucres[index]] -= 1;
             could_consume = true;
         }
 
         return could_consume;
-       
+
 
     }
 
@@ -650,5 +665,41 @@ public class GameManager : MonoBehaviour
         workerPopulation.Remove(w);
     }
 
+    void CheckGameState()
+    {
+        if (playerMoney < 0)
+        {
+            EndGame();
+        }
+        else if (playerMoney > 10000 || workerPopulation.Count > 100)
+        {
+            WinGame();
+        }
+    }
+
+    void EndGame()
+    {
+        if (gameHasEnded == false)
+        {
+            gameHasEnded = true;
+            gameOverUI.SetActive(true);
+            Invoke("Restart", restartDelay);
+        }
+    }
+
+    void WinGame()
+    {
+        if (gameHasEnded == false)
+        {
+            gameHasEnded = true;
+            winGameUI.SetActive(true);
+        }
+    }
+
+    void Restart()
+    {
+        gameOverUI.SetActive(false);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
     #endregion
 }
